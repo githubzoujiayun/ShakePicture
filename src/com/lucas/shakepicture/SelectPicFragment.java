@@ -1,14 +1,10 @@
 package com.lucas.shakepicture;
 
-import java.io.File;
-
-import com.lucas.util.AndroidUtil;
-import com.lucas.util.JavaSEUtil;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -53,16 +49,28 @@ public class SelectPicFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, SELECT_PIC);
+                
+       //             ShakePicActivity.start(activity);
+                
+     //           Intent intent = new Intent(activity, Vertices.class);
+     //           startActivity(intent);
+            }
+        });
+        
+        appBuildInPicTv.setOnClickListener(new OnClickListener() {
+            
+            public void onClick(View v) {
+      //          ShakePicActivity.start(activity, R.drawable.pa);
             }
         });
         
         photographTv.setOnClickListener(new OnClickListener() {
             
             public void onClick(View v) {
-                uriTakePic = Uri.fromFile(AndroidUtil.getFileInSdcardByName(activity, "camera_raw.jpg", true));
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriTakePic);
-                startActivityForResult(intent, TAKE_PIC);
+//                uriTakePic = Uri.fromFile(Common.getFileInSdcardByName(activity, "camera_raw.jpg", true));
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriTakePic);
+//                startActivityForResult(intent, TAKE_PIC);
             }
         });
         
@@ -78,30 +86,30 @@ public class SelectPicFragment extends Fragment {
         else if (requestCode == SELECT_PIC && data != null) {   // 选择一张本地图片
             // 得到图片的全路径
             Uri uri = data.getData();
-          //  ProcessPicActivity.start(activity, uri);
-            startPhotoCut(uri);
-        } else if(requestCode == CUT_PIC && data != null) {
-            Bundle extras = data.getExtras();
-            if (extras != null) {
-                Bitmap image = extras.getParcelable("data");
-                ShakePicActivity.start(activity, image);
-//                if (image != null) {
-//                    imageView1.setImageBitmap(image);
-//                    try {
-//                        File myCaptureFile = new File("/data/data/com.test.cropphoto/files/icon.jpg");
-//                        BufferedOutputStream bos = new BufferedOutputStream(
-//                                new FileOutputStream(myCaptureFile));
-//                        image.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-//                        bos.flush();
-//                        bos.close();
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-            }
-        }
+            DigPicActivity.start(activity, uri);
+        } 
+//        else if(requestCode == CUT_PIC && data != null) {
+//            Bundle extras = data.getExtras();
+//            if (extras != null) {
+//                Bitmap image = extras.getParcelable("data");
+//                ShakePicActivity.start(activity, image);
+////                if (image != null) {
+////                    imageView1.setImageBitmap(image);
+////                    try {
+////                        File myCaptureFile = new File("/data/data/com.test.cropphoto/files/icon.jpg");
+////                        BufferedOutputStream bos = new BufferedOutputStream(
+////                                new FileOutputStream(myCaptureFile));
+////                        image.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+////                        bos.flush();
+////                        bos.close();
+////                    } catch (FileNotFoundException e) {
+////                        e.printStackTrace();
+////                    } catch (IOException e) {
+////                        e.printStackTrace();
+////                    }
+////                }
+//            }
+//        }
         
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -110,21 +118,21 @@ public class SelectPicFragment extends Fragment {
      * 裁剪图片方法实现 
      * @param uri 
      */ 
-     public void startPhotoCut(Uri uri) { 
-         Intent intent = new Intent("com.android.camera.action.CROP"); 
-         intent.setDataAndType(uri, "image/*"); 
-         //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪 
-         intent.putExtra("crop", "true"); 
-         // aspectX aspectY 是宽高的比例 
-     //    intent.putExtra("aspectX", 1); 
-     //    intent.putExtra("aspectY", 1); 
-         // outputX outputY 是裁剪图片宽高 
-    //     intent.putExtra("outputX", 100); 
-    //     intent.putExtra("outputY", 100); 
-         intent.putExtra("output", Uri.fromFile(AndroidUtil.getFileInSdcardByName(activity, "tmp.jpg", true)));
-         intent.putExtra("outputFormat", "JPEG"); // 返回格式
-         intent.putExtra("return-data", true); 
-         startActivityForResult(intent, CUT_PIC); 
-     } 
+//     public void startPhotoCut(Uri uri) { 
+//         Intent intent = new Intent("com.android.camera.action.CROP"); 
+//         intent.setDataAndType(uri, "image/*"); 
+//         //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪 
+//         intent.putExtra("crop", "true"); 
+//         // aspectX aspectY 是宽高的比例 
+//         intent.putExtra("aspectX", 1); 
+//         intent.putExtra("aspectY", 1); 
+//         // outputX outputY 是裁剪图片宽高 
+//         intent.putExtra("outputX", 100); 
+//         intent.putExtra("outputY", 100); 
+//  //       intent.putExtra("output", Uri.fromFile(Common.getFileInSdcardByName(activity, "tmp.jpg", true)));
+// //        intent.putExtra("outputFormat", "JPEG"); // 返回格式
+//         intent.putExtra("return-data", true); 
+//         startActivityForResult(intent, CUT_PIC); 
+//     } 
 
 }

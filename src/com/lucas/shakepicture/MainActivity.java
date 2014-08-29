@@ -11,6 +11,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+   //     setContentView(new MeshBitmap(this));
         
         FragmentManager mgr = getFragmentManager();
         FragmentTransaction trans = mgr.beginTransaction();
