@@ -35,6 +35,11 @@
             android:name="com.lucas.shakepicture.ShakePicActivity" >
         </activity>
         
+        <activity
+            android:name="com.lucas.picareaselect.DigActivity"
+            android:label="挖图" >
+        </activity>
+        
     </application>
 
 </manifest>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>   
+    
+    <string name="area_not_coincide">添加失败，添加的区域不能重合</string>
+    <string name="area_exist">添加失败，当前区域已存在</string>
+
+</resources>

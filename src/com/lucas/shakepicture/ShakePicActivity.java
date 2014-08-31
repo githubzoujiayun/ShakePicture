@@ -38,25 +38,27 @@ public class ShakePicActivity extends Activity {
         context.startActivity(intent);
     }
     
-    private VerticesView view;
+    private VerticesView verticesView;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake_pic);
+        
+ //       Log.e("", "ShakePicActivity onCreate()");
 
         Bitmap bitmap = WillShakePicBitmap.bitmap;
         ArrayList<RectF> rects = getIntent().getExtras().getParcelableArrayList("rects");        
         
-        view = (VerticesView) findViewById(R.id.verticesView);
-        view.init(bitmap, rects);        
+        verticesView = (VerticesView) findViewById(R.id.verticesView);
+        verticesView.init(bitmap, rects);        
        
    //     for(int i = 0; i < rects.size(); i++) {
    //         shakeOneRect(view, rects.get(i));
    //     }
         
      
-         view.autoShake();
+         verticesView.autoShake();
 
     }
     
@@ -125,7 +127,7 @@ public class ShakePicActivity extends Activity {
     protected void onDestroy() {
     //    quit = true;
         
-        view.stopShake();
+        verticesView.stopShake();
         super.onDestroy();
     }
     

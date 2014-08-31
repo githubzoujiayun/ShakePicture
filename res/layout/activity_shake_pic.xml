@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+    android:orientation="vertical" >
 
     <Button
         android:id="@+id/shake"
@@ -16,11 +15,9 @@
         android:text="抖一抖" />
 
     <com.lucas.shakepicture.ui.VerticesView
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="11dp"
         android:id="@+id/verticesView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@id/shake"
         android:layout_centerInParent="true"
         android:background="@color/blue" />
