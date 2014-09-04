@@ -1,25 +1,102 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/shake"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="抖一抖" />
-
-    <com.lucas.shakepicture.ui.VerticesView
+    <com.lucas.shakepicture.VerticesView
         android:id="@+id/verticesView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/shake"
-        android:layout_centerInParent="true"
-        android:background="@color/blue" />
+        android:layout_gravity="center"
+        android:background="@color/black" />
 
-</RelativeLayout>
+    <!-- 最好搞成半透明的 -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:alpha="0.75"
+        android:text="广告位！！！"
+        android:background="#3F000000" />
+
+    <!--
+        底部操作栏 
+    	background透明度，前两位设置，范围[0-FF]
+    -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="#3F000000"
+        android:gravity="center_vertical" >
+
+        <!-- 分割线 -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentTop="true"
+            android:background="@color/black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="摇晃手机加快抖动"
+                android:alpha="0.75"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击屏幕改变抖动方向"
+                android:alpha="0.75"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:text="返回"
+            android:alpha="0.75"
+            android:textColor="@color/white" />
+        
+        <View
+            android:id="@+id/separator"
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/back"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:alpha="0.75"
+            android:background="#FFFFFF" />
+        
+        <TextView
+            android:id="@+id/save_as_gif"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/separator"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:text="保存为动态图"
+            android:alpha="0.75"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+</FrameLayout>

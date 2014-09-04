@@ -10,15 +10,17 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.lucas.picareaselect.PicAreaSelect;
-import com.lucas.picareaselect.PicAreaSelect.OnSelectDoneListener;
+import com.lucas.shakepicture.picareaselector.PicAreaSelect;
+import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
+import com.lucas.shakepicture.pictureselector.PictureSelector;
+import com.lucas.shakepicture.pictureselector.PictureSelector.OnPicSelectedListener;
 
 public class SelectPicFragment extends Fragment {
     
@@ -48,6 +50,7 @@ public class SelectPicFragment extends Fragment {
         appBuildInPicTv = (TextView) v.findViewById(R.id.app_built_in_pic);
         photographTv = (TextView) v.findViewById(R.id.photograph);
                 
+        // 本地图片
         localPicTv.setOnClickListener(new OnClickListener() {
             
             public void onClick(View v) {
@@ -63,13 +66,22 @@ public class SelectPicFragment extends Fragment {
             }
         });
         
+        // app自带图片
         appBuildInPicTv.setOnClickListener(new OnClickListener() {
             
             public void onClick(View v) {
-      //          ShakePicActivity.start(activity, R.drawable.pa);
+                PictureSelector.select(activity, new OnPicSelectedListener() {
+                    
+                    @Override
+                    public void onSelected(Bitmap bitmap) {
+                        BitmapReference.appBuildInSelectedBitmap = bitmap;
+                        PicAreaSelect.startSelect(activity, onSelectDonwListener);
+                    }
+                });
             }
         });
         
+        // 拍照
         photographTv.setOnClickListener(new OnClickListener() {
             
             public void onClick(View v) {
@@ -82,28 +94,37 @@ public class SelectPicFragment extends Fragment {
         
         return v;
     }
+    
+    private OnSelectDoneListener onSelectDonwListener = new OnSelectDoneListener() {
+
+        @Override
+        public boolean onSelectDone(Bitmap bitmap, Set<RectF> rectSet) {
+            if(rectSet.size() == 0) {
+                Toast.makeText(activity, R.string.select_shake_area, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            
+            BitmapReference.willShakePicBitmap = bitmap;
+
+            ArrayList<RectF> list = new ArrayList<RectF>();
+            list.addAll(rectSet);
+
+            ShakePicActivity.start(activity, list);
+            return false;
+        }
+        
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TAKE_PIC) {  // 拍照
-          //  private Uri uriTakePic;         // 拍照时，拍照后图片的Uri
-        } else if (requestCode == SELECT_PIC && data != null) {   // 选择一张本地图片
+        if (requestCode == TAKE_PIC) { // 拍照
+            // private Uri uriTakePic; // 拍照时，拍照后图片的Uri
+        } else if (requestCode == SELECT_PIC && data != null) { // 选择一张本地图片
             // 得到图片的全路径
             Uri uri = data.getData();
-   //         Log.e("", activity.toString() + ", " + uri.toString());
-            PicAreaSelect.startSelect(activity, uri, new OnSelectDoneListener() {
-                
-                @Override
-                public void onSelectDone(Bitmap bitmap, Set<RectF> rectSet) {
-                  WillShakePicBitmap.bitmap = bitmap;
-                  
-                  ArrayList<RectF> list = new ArrayList<RectF>();
-                  list.addAll(rectSet);
-                  
-                  ShakePicActivity.start(activity, list);
-                }
-            });
-        } 
+            // Log.e("", activity.toString() + ", " + uri.toString());
+            PicAreaSelect.startSelect(activity, uri, onSelectDonwListener);
+        }
 //        else if(requestCode == DIG_PIC && resultCode == Activity.RESULT_OK) {            
 //            WillShakePicBitmap.bitmap = PicAreaSelect.getBitmap();
 //            
@@ -138,25 +159,4 @@ public class SelectPicFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
     
-    /** 
-     * 裁剪图片方法实现 
-     * @param uri 
-     */ 
-//     public void startPhotoCut(Uri uri) { 
-//         Intent intent = new Intent("com.android.camera.action.CROP"); 
-//         intent.setDataAndType(uri, "image/*"); 
-//         //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪 
-//         intent.putExtra("crop", "true"); 
-//         // aspectX aspectY 是宽高的比例 
-//         intent.putExtra("aspectX", 1); 
-//         intent.putExtra("aspectY", 1); 
-//         // outputX outputY 是裁剪图片宽高 
-//         intent.putExtra("outputX", 100); 
-//         intent.putExtra("outputY", 100); 
-//  //       intent.putExtra("output", Uri.fromFile(Common.getFileInSdcardByName(activity, "tmp.jpg", true)));
-// //        intent.putExtra("outputFormat", "JPEG"); // 返回格式
-//         intent.putExtra("return-data", true); 
-//         startActivityForResult(intent, CUT_PIC); 
-//     } 
-
 }

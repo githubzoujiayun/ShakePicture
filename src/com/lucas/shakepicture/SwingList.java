@@ -1,4 +1,4 @@
-package com.lucas.shakepicture.datastructure;
+package com.lucas.shakepicture;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,10 +19,8 @@ public class SwingList<E> extends ArrayList<E> {
     
     private OnOnePeriodListener listener;
     
-    // 至少保证有一个元素
-    public SwingList(E e, OnOnePeriodListener onOnePeriodListener) {
+    public SwingList(OnOnePeriodListener onOnePeriodListener) {
         this.listener = onOnePeriodListener;
-        add(e);
     }
     
     @Override
@@ -38,7 +36,7 @@ public class SwingList<E> extends ArrayList<E> {
 //        return new SwingListIteratorImpl(beginIndex);
 //    }
     
-    private int tmp = 0;
+ //   private int tmp = 0;
     
     private class Index {
         private boolean increase = true;        
@@ -104,6 +102,9 @@ public class SwingList<E> extends ArrayList<E> {
         
         @Override
         public boolean hasNext() {
+            if(SwingList.this.isEmpty()) 
+                return false;
+            
             // 因为是左右摇摆的list，所以总有next
             return true;
         }

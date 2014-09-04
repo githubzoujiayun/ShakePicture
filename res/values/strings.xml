@@ -8,5 +8,12 @@
     <string name="photograph">相机拍照</string>
     <string name="gif_pics">GIF图库</string>
     <string name="app_recommend">精品推荐</string> <!-- 其实是应用推荐而已 -->
+    
+    <string name="select_shake_area">请先选择需要抖动的区域</string>
+    
+    <string name="area_not_coincide">添加失败，添加的区域不能重合</string>
+    <string name="area_exist">添加失败，当前区域已存在</string>
+    
+    <string name="double_click_delete">双击删除</string>
 
 </resources>
