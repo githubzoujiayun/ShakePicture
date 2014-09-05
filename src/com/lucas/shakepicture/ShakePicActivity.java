@@ -1,12 +1,17 @@
 package com.lucas.shakepicture;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -37,18 +42,22 @@ public class ShakePicActivity extends Activity {
     
     private VerticesView verticesView;
     
+    private SensorManager sensorManager;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake_pic);
-        
- //       Log.e("", "ShakePicActivity onCreate()");
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER); // 加速度传感器
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         Bitmap bitmap = BitmapReference.willShakePicBitmap;
         ArrayList<RectF> rects = getIntent().getExtras().getParcelableArrayList("rects");        
         
         verticesView = (VerticesView) findViewById(R.id.verticesView);
-        verticesView.init(bitmap, rects, 30);     
+        verticesView.init(bitmap, rects);     
      
         verticesView.start();
         
@@ -117,7 +126,6 @@ public class ShakePicActivity extends Activity {
             x -= originX;
             y = originY - y;
             
-            //  下面的弧度运行不理解，再看看。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。
             double angle = Math.atan2(y, x); // [-π, π]
             // 控制angle在 [0, PI] 内
            if(angle < 0) {
@@ -130,10 +138,42 @@ public class ShakePicActivity extends Activity {
         return true;
     }    
     
+    private SensorEventListener sensorEventListener = new SensorEventListener() {
+        /*
+         * 加速度的阈值，超过此值认为晃动了手机
+         * 因为重力的存在，手机不动就有9.8m/s2的加速度，所以此值要大于9.8
+         */
+        private static final int THRESHOLD = 15; 
+        
+        private long lastShakeTime = 0;
+        
+        @Override
+        public void onSensorChanged(SensorEvent event) {            
+            float x = Math.abs(event.values[0]);
+            float y = Math.abs(event.values[1]);
+            float z = Math.abs(event.values[2]);
+            
+            if(x > THRESHOLD || y > THRESHOLD || z > THRESHOLD) {
+                long currTime = new Date().getTime();
+                if(currTime - lastShakeTime < 200) {
+                    // 距上次晃动时间不足200ms，认为是一次晃动
+                    return;
+                }
+
+                verticesView.speedUp();
+                
+                lastShakeTime = currTime;
+            }
+        }
+        
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+    };
+    
     @Override
     protected void onDestroy() {
     //    quit = true;
-        
+        sensorManager.unregisterListener(sensorEventListener);
         verticesView.stopShake();
         super.onDestroy();
     }

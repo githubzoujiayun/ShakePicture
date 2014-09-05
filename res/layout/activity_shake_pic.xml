@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="摇晃手机加快抖动"
+                android:text="在手掌轻晃手机加快抖动速度"
                 android:alpha="0.75"
                 android:textColor="@color/white"
                 android:textSize="12sp" />

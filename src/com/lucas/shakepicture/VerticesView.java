@@ -36,13 +36,48 @@ public class VerticesView extends View {
     // 最大振幅占总范围的百分比，如全范围震，则画面过于生硬
     private static final float MAX_RANGE_PERCENT = (80/(float)100);
     
-    private int stepCountForOneRadius;
+    // 一个半径步数的最小值
+    private static final int STEP_COUNT_FOR_ONE_REDIUS_MIN = 10;
+    
+    // 一个半径步数的初始值
+    private static final int STEP_COUNT_FOR_ONE_REDIUS_ORIGINAL = 40;
+    
+    private int stepCountForOneRadius = STEP_COUNT_FOR_ONE_REDIUS_ORIGINAL;
     
     private boolean stop = false;
     
+    /**
+     * 设置震动的角度
+     */
     public void setAngle(double angle) {
         this.angle = angle;
 
+        // 如果已经停止了，就重启震动
+        if (stop) {
+            Iterator<SubVerticesView> iter = allSubVVs.iterator();
+
+            while (iter.hasNext()) {
+                SubVerticesView svv = iter.next();
+                svv.setMyPath();
+            }
+
+            start();
+            return;
+        }
+
+        Iterator<SubVerticesView> iter = allSubVVs.iterator();
+
+        while (iter.hasNext()) {
+            SubVerticesView svv = iter.next();
+            svv.needResetPath = true;
+        }
+    }
+    
+    public void speedUp() {
+        if(stepCountForOneRadius - 1 >= STEP_COUNT_FOR_ONE_REDIUS_MIN) {
+            stepCountForOneRadius -= 1;
+        }
+        
         // 如果已经停止了，就重启震动
         if (stop) {
             Iterator<SubVerticesView> iter = allSubVVs.iterator();
@@ -246,10 +281,9 @@ public class VerticesView extends View {
     private int xTranslateOnDraw = -1;
     private int yTranslateOnDraw = -1;
 
-    public void init(Bitmap bitmap, ArrayList<RectF> rects, int stepCountForOneRadius) {
+    public void init(Bitmap bitmap, ArrayList<RectF> rects) {
         
         this.bitmap = bitmap;
-        this.stepCountForOneRadius = stepCountForOneRadius;
 
         setFocusable(true);
         
@@ -257,7 +291,7 @@ public class VerticesView extends View {
         
         Iterator<RectF> iter = rects.iterator();
         while(iter.hasNext()) {     
-            allSubVVs.add(new SubVerticesView(iter.next())); // 一个半径运行30步
+            allSubVVs.add(new SubVerticesView(iter.next())); 
         }
 
         Shader s = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
