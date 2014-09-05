@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.lucas.shakepicture.R;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,8 +13,9 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.PathEffect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
+
+import com.lucas.shakepicture.R;
 
 public class RectSelectableImageView extends ImageView {
     

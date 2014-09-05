@@ -3,8 +3,6 @@ package com.lucas.shakepicture;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import android.util.Log;
-
 /**
  * 一个左右摇摆的数据结构
  * @author Lucas

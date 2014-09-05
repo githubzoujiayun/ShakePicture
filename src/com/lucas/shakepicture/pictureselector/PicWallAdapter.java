@@ -10,7 +10,6 @@ import java.util.Set;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +56,7 @@ public class PicWallAdapter extends ArrayAdapter<String> {
 
             @Override
             protected int sizeOf(Integer key, Bitmap value) {
-                 return value.getByteCount();
+                 return value.getByteCount() / 1024;
             }
 
         };
@@ -67,9 +66,6 @@ public class PicWallAdapter extends ArrayAdapter<String> {
     
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        if(convertView != null) {
-            Log.e("", "QIJIQIJIQIJI");
-        }
         
         if(convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.pic_wall_item, null);  
@@ -104,7 +100,7 @@ public class PicWallAdapter extends ArrayAdapter<String> {
             protected Bitmap doInBackground(Integer... params) {                   
                 InputStream is = null;
                 try {
-                    is = PictureSelector.assetManager.open(picPath);
+                    is = context.getAssets().open(picPath);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;

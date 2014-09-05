@@ -1,10 +1,52 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/black" >
-        
+    android:background="@color/black"
+    android:orientation="vertical"  >
+    
+        <TextView 
+        android:id="@+id/local_pic"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="3dp"
+		android:paddingBottom="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="本地图片"
+        android:background="@color/red"
+        android:textSize="40sp"/>
+    
+    <TextView 
+        android:id="@+id/app_built_in_pic"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="3dp"
+		android:paddingBottom="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="应用自带图片"
+        android:background="@color/blue"
+        android:textSize="40sp"
+        android:layout_marginTop="20dp"/>
+    
+    <TextView 
+        android:id="@+id/photograph"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="3dp"
+		android:paddingBottom="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="相机拍照"
+        android:background="@color/green"
+        android:textSize="40sp"
+        android:layout_marginTop="20dp"/>
+    <!--  
     <FrameLayout 
         android:id="@+id/fragment_holder"
         android:layout_width="match_parent"
@@ -93,5 +135,6 @@
         android:layout_height="1px"
         android:layout_alignTop="@id/operation_bar"
         android:background="@color/darkgray" />
+-->
+</LinearLayout>
 
-</RelativeLayout>

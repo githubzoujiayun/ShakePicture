@@ -1,9 +1,5 @@
 package com.lucas.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,7 +10,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
-import android.os.Environment;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;

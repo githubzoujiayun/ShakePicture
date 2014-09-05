@@ -97,7 +97,15 @@ public class DigActivity extends Activity {
         Log.e("111", "" + iv.getWidth() + ", " + iv.getHeight());
         
         sb = new SelectBox(this);
-        sb.setLocal(50, 50, 200, 200);
+        
+        // 显示在屏幕正中间
+        int screenW = AndroidUtil.getScreenWidth(this);
+        int screenH = AndroidUtil.getScreenHeight(this);
+        int sbW = 250;
+        int sbH = 150;
+        int left = (screenW - sbW) / 2;
+        int top = (screenH - sbH) / 2;
+        sb.setLocal(left, top, left + sbW, top + sbH);
         layout.addView(sb);
         
         layout.setOnTouchListener(onLayoutTouchListener);

@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,23 +16,31 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import com.lucas.shakepicture.R;
-import com.lucas.shakepicture.pictureselector.PictureSelector.OnPicSelectedListener;
 
 public class PicWallActivity extends Activity {
-
-    private static OnPicSelectedListener listener;
     
-    public static void start(Context context, OnPicSelectedListener listener) {
-        if(listener == null)
-            return;
-        
-        PicWallActivity.listener = listener;
-        
-        Intent intent = new Intent(context, PicWallActivity.class);
-        context.startActivity(intent);
+//    public static void start(Context context, OnPicSelectedListener listener) {
+//        if(listener == null)
+//            return;
+//        
+//        PicWallActivity.listener = listener;
+//        
+//        Intent intent = new Intent(context, PicWallActivity.class);
+//        context.startActivity(intent);
+//    }
+    
+    public static void startForResult(Activity activity, int requestCode) {
+        Intent intent = new Intent(activity, PicWallActivity.class);
+        activity.startActivityForResult(intent, requestCode);
     }
     
-    private  PicWallAdapter adapter;
+    public static void startForResult(Fragment fragment, int requestCode) {
+        Intent intent = new Intent(fragment.getActivity().getApplicationContext(), PicWallActivity.class);
+        fragment.startActivityForResult(intent, requestCode);
+    }
+    
+    private PicWallAdapter adapter;
+    private String[] picPathArr;  // 保存相对于 assets 的路径
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +51,9 @@ public class PicWallActivity extends Activity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true); // 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
         actionBar.setDisplayShowHomeEnabled(true);  //使左上角图标可点击，对应id为android.R.id.home，对应ActionBar.DISPLAY_SHOW_HOME
-        
-        final String[] picPathArr;
+                
         try {
-            picPathArr = PictureSelector.assetManager.list("belle");
+            picPathArr = getAssets().list("belle");
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("", e.getMessage());
@@ -65,8 +72,7 @@ public class PicWallActivity extends Activity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GalleryActivity.start(PicWallActivity.this, picPathArr, position, PicWallActivity.listener);
-                finish();
+                GalleryActivity.startForRequest(PicWallActivity.this, 0, picPathArr, position);
             }
         });
     }
@@ -80,6 +86,20 @@ public class PicWallActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 0 && resultCode == RESULT_OK) {
+            int index = data.getIntExtra("selectIndex", -1);
+            if(index != -1) {
+                Intent intent = getIntent();
+                intent.putExtra("picPath", picPathArr[index]);
+                
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }
+    }
+
     @Override
     protected void onDestroy() {
         if(adapter != null)

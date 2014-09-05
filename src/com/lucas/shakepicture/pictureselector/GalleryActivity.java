@@ -22,23 +22,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lucas.shakepicture.R;
-import com.lucas.shakepicture.pictureselector.PictureSelector.OnPicSelectedListener;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
 
 public class GalleryActivity extends Activity {
-
-    private static OnPicSelectedListener listener;
     
-    public static void start(Context context, String[] picPathArray, int beginPos, OnPicSelectedListener listener) {
-        if(listener == null)
-            return;
-        
-        GalleryActivity.listener = listener;
-        Intent intent = new Intent(context, GalleryActivity.class);
+//    public static void start(Context context, String[] picPathArray, int beginPos) {
+//        Intent intent = new Intent(context, GalleryActivity.class);
+//        intent.putExtra("picPathArray", picPathArray);
+//        intent.putExtra("beginPos", beginPos);
+//        context.startActivity(intent);
+//    }
+    
+    public static void startForRequest(Activity activity, int requestCode, String[] picPathArray, int beginPos) {
+        Intent intent = new Intent(activity, GalleryActivity.class);
         intent.putExtra("picPathArray", picPathArray);
         intent.putExtra("beginPos", beginPos);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, requestCode);
     }
     
     private int currentPage;
@@ -116,7 +116,7 @@ public class GalleryActivity extends Activity {
     private Bitmap getBitmapByPos(int pos) {
         InputStream is = null;
         try {
-            is = PictureSelector.assetManager.open(picPathArray[pos]);
+            is = getAssets().open(picPathArray[pos]);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("", e.getMessage());
@@ -149,7 +149,10 @@ public class GalleryActivity extends Activity {
         }
         
         if(item.getTitle() == "Ñ¡¶¨") {
-            listener.onSelected(getBitmapByPos(currentPage));
+            Intent intent = getIntent();
+            intent.putExtra("selectIndex",  currentPage);
+            
+            setResult(RESULT_OK, intent);
             finish();
         }
         

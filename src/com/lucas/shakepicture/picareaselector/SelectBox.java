@@ -2,7 +2,6 @@ package com.lucas.shakepicture.picareaselector;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -34,9 +33,6 @@ public class SelectBox extends View {
     }
 
     public void setLocal(float left, float top, float right, float bottom) {
- //       left = left < 0 ? 0 : left;
-  //      top = top < 0 ? 0 : top;
-        
         this.left = left;
         this.top = top;
         this.right = right;
