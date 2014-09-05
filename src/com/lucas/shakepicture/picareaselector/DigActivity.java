@@ -94,8 +94,6 @@ public class DigActivity extends Activity {
         iv.setImageBitmap(bitmap);        
         iv.setOnTouchListener(onImageViewTouchListener);
         
-        Log.e("111", "" + iv.getWidth() + ", " + iv.getHeight());
-        
         sb = new SelectBox(this);
         
         // 显示在屏幕正中间

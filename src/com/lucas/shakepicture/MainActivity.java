@@ -9,11 +9,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,14 +42,17 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-   //     setContentView(new MeshBitmap(this));
         
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
         int w = AndroidUtil.getScreenWidth(this);
         int h = AndroidUtil.getScreenHeight(this);
         Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show(); 
         
-    //    View v = inflater.inflate(R.layout.fragment_select_pic, null);
+        // 启动小人动画
+        ImageView iv = (ImageView) findViewById(R.id.shake_people);
+        Animatable anim = (Animatable) iv.getBackground();
+        anim.start();
+        
         localPicTv = (TextView) findViewById(R.id.local_pic);
         appBuildInPicTv = (TextView) findViewById(R.id.app_built_in_pic);
         photographTv = (TextView) findViewById(R.id.photograph);

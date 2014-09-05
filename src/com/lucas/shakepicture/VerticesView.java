@@ -335,10 +335,9 @@ public class VerticesView extends View {
     public List<Bitmap> getBitmapsOnPath() {
         class ViewInfo {
             private SwingListIterator<PointF> iter;
-       //     private SwingList<PointF> path = new SwingList<PointF>(null); 
-            private float[] verts;// = new float[10];
-            private float[] texs;// = new float[10];
-            private short[] indices;// = { 0, 1, 2, 3, 4, 1 };
+            private float[] verts;
+            private float[] texs;
+            private short[] indices;
         }
         
         List<ViewInfo> viewInfoList = new ArrayList<ViewInfo>();

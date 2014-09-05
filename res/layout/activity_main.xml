@@ -1,140 +1,98 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@color/black"
-    android:orientation="vertical"  >
+    android:background="@drawable/bg"
+    tools:context=".MainActivity" >
     
-        <TextView 
-        android:id="@+id/local_pic"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="3dp"
-		android:paddingBottom="3dp"
-        android:layout_width="wrap_content"
+	<TextView 
+	    android:id="@+id/title"
+	    android:paddingTop="20dp"
+	    android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="本地图片"
-        android:background="@color/red"
-        android:textSize="40sp"/>
-    
-    <TextView 
-        android:id="@+id/app_built_in_pic"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="3dp"
-		android:paddingBottom="3dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="应用自带图片"
-        android:background="@color/blue"
+        android:layout_centerHorizontal="true"
         android:textSize="40sp"
-        android:layout_marginTop="20dp"/>
-    
-    <TextView 
-        android:id="@+id/photograph"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="3dp"
-		android:paddingBottom="3dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="相机拍照"
-        android:background="@color/green"
-        android:textSize="40sp"
-        android:layout_marginTop="20dp"/>
-    <!--  
-    <FrameLayout 
-        android:id="@+id/fragment_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </FrameLayout>
-    
+        android:text="抖一抖"/>
+
     <LinearLayout
-        android:id="@+id/operation_bar"
-        android:layout_width="match_parent"
+        android:layout_below="@id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="70dp" >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="4dp"
-            android:paddingTop="5dp" >
+        <TextView
+            android:id="@+id/local_pic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/button_bg"
+            android:gravity="center"
+            android:text="本地图片"
+            android:textSize="25sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher"
-                android:layout_gravity="center_horizontal" />
+        <TextView
+            android:id="@+id/app_built_in_pic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_bg"
+            android:gravity="center"
+            android:paddingTop="3dp"
+            android:text="应用自带图片"
+            android:textSize="25sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/select_pic"
-                android:alpha="0.75"
-                android:textColor="@color/white"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="4dp"
-            android:paddingTop="5dp" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" 
-                android:layout_gravity="center_horizontal"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gif_pics" 
-                android:alpha="0.75"
-                android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="4dp"
-            android:paddingTop="5dp" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" 
-                android:layout_gravity="center_horizontal"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_recommend" 
-                android:alpha="0.75"
-                android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/photograph"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_bg"
+            android:gravity="center"
+            android:paddingTop="3dp"
+            android:text="相机拍照"
+            android:textSize="25sp" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignTop="@id/operation_bar"
-        android:background="@color/darkgray" />
--->
-</LinearLayout>
+    <!-- 显示小人动画 -->
+    <ImageView
+        android:id="@+id/shake_people"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shake_people" />
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_circle" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingTop="3dp"
+            android:textSize="20sp"
+            android:text="精品" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:paddingBottom="3dp"
+            android:textSize="20sp"
+            android:text="推荐" />
+    </LinearLayout>
+
+</RelativeLayout>
