@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lucas.shakepicture"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -28,6 +28,10 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
+        <!-- 友盟的AppKey -->
+        <meta-data android:value="540adda5fd98c5b416024cbb" android:name="UMENG_APPKEY"></meta-data>
+        
         <activity
             android:name="com.lucas.shakepicture.MainActivity"
             android:label="@string/app_name"
@@ -88,6 +92,20 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+        <!-- 有米结束 -->
+        
+        <!-- 友盟更新新版本 -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <!-- 友盟更新新版本结束 -->
+
         
     </application>
 

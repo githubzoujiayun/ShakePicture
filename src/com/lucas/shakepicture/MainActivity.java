@@ -41,6 +41,7 @@ import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener
 import com.lucas.shakepicture.pictureselector.PicWallActivity;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
+import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends Activity {
     
@@ -76,6 +77,10 @@ public class MainActivity extends Activity {
         Editor editor = sp.edit();
         editor.putInt(Common.SPKeyBootCount, ++bootCount);
         editor.commit();
+        
+        // 检查更新（使用友盟的接口）
+        UmengUpdateAgent.setDeltaUpdate(false); // true增量更新，设为false则为全量更新
+        UmengUpdateAgent.update(this);
         
         if(!isAddShortCut()) 
             addShortCut();
