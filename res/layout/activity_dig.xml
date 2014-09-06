@@ -59,7 +59,7 @@
                     android:alpha="0.75"
                     android:paddingBottom="3dp"
                     android:paddingTop="3dp"
-                    android:text="取消"
+                    android:text="@string/cancle"
                     android:textColor="#FFFFFF"
                     android:gravity="center" />
 
@@ -79,7 +79,7 @@
                     android:alpha="0.75"
                     android:paddingBottom="3dp"
                     android:paddingTop="3dp"
-                    android:text="添加"
+                    android:text="@string/add"
                     android:textColor="#FFFFFF"
                     android:gravity="center" />
 
@@ -99,7 +99,7 @@
                     android:alpha="0.75"
                     android:paddingBottom="3dp"
                     android:paddingTop="3dp"
-                    android:text="完成"
+                    android:text="@string/play"
                     android:textColor="#FFFFFF"
                     android:gravity="center" />
             </LinearLayout>

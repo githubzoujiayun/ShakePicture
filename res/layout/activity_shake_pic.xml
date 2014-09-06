@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="晃动手机加快抖动速度"
+                android:text="@string/speed_up_shake"
                 android:alpha="0.75"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
@@ -59,7 +59,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="点击屏幕改变抖动方向"
+                android:text="@string/change_shake_orientation"
                 android:alpha="0.75"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
@@ -72,7 +72,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:gravity="center"
-            android:text="返回"
+            android:text="@string/back"
             android:alpha="0.75"
             android:textColor="@color/white" />
         
@@ -95,7 +95,7 @@
 			android:layout_toLeftOf="@id/separator"
             android:layout_marginRight="15dp"
             android:gravity="center"
-            android:text="保存为动态图"
+            android:text="@string/save_as_gif"
             android:alpha="0.75"
             android:textColor="@color/white"
             android:visibility="invisible" />

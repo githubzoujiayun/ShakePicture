@@ -138,7 +138,7 @@ public class GalleryActivity extends Activity {
 
     @Override
     public boolean onCreatePanelMenu(int featureId, Menu menu) {
-        menu.add("选定").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(R.string.select_done).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
@@ -148,7 +148,7 @@ public class GalleryActivity extends Activity {
             finish();
         }
         
-        if(item.getTitle() == "选定") {
+        if(item.getTitle().equals(getResources().getString(R.string.select_done))) {
             Intent intent = getIntent();
             intent.putExtra("selectIndex",  currentPage);
             
