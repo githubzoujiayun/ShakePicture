@@ -10,6 +10,10 @@ import android.widget.Toast;
 
 public class Common {
     
+    public static final String SharedPreFileName = "ShakePicture"; // 本项目的SharedPreferences的文件名
+    /**************** SharedPreferences key ***********************/
+    public static final String SPKeyBootCount = "BootCount"; // 启动次数
+    
     private static final String FOLDER_NAME = "ShakePicture";
 
     public static File getFileInSdcardByName(Context context, String fileName, boolean createIfNoeExists) {

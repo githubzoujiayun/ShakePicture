@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +22,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 
 import com.lucas.util.AndroidUtil;
 
@@ -35,12 +40,10 @@ public class ShakePicActivity extends Activity {
      */
     public static void start(Context context, ArrayList<RectF> rects) {
         if (BitmapReference.willShakePicBitmap == null) { 
-            Log.e("", "444444444444444444444444444444");
             return;
         }
 
         Intent intent = new Intent(context, ShakePicActivity.class);
-    //    intent.putExtra("bitmap", bitmap);
         intent.putParcelableArrayListExtra("rects", rects);
         context.startActivity(intent);
     }
@@ -53,6 +56,14 @@ public class ShakePicActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake_pic);
+        
+        // 设置有米悬浮广告条
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams( 
+                                    FrameLayout.LayoutParams.FILL_PARENT,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL; 
+        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
+        addContentView(adView, layoutParams);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER); // 加速度传感器

@@ -34,13 +34,13 @@ public class VerticesView extends View {
     private double angle = Math.PI / 2; // 震动夹角的弧度值，默认垂直震动
     
     // 最大振幅占总范围的百分比，如全范围震，则画面过于生硬
-    private static final float MAX_RANGE_PERCENT = (80/(float)100);
+    private static final float MAX_RANGE_PERCENT = (70/(float)100);
     
     // 一个半径步数的最小值
     private static final int STEP_COUNT_FOR_ONE_REDIUS_MIN = 10;
     
     // 一个半径步数的初始值
-    private static final int STEP_COUNT_FOR_ONE_REDIUS_ORIGINAL = 40;
+    private static final int STEP_COUNT_FOR_ONE_REDIUS_ORIGINAL = 50;
     
     private int stepCountForOneRadius = STEP_COUNT_FOR_ONE_REDIUS_ORIGINAL;
     
@@ -74,8 +74,8 @@ public class VerticesView extends View {
     }
     
     public void speedUp() {
-        if(stepCountForOneRadius - 1 >= STEP_COUNT_FOR_ONE_REDIUS_MIN) {
-            stepCountForOneRadius -= 1;
+        if(stepCountForOneRadius - 2 >= STEP_COUNT_FOR_ONE_REDIUS_MIN) {
+            stepCountForOneRadius -= 2;
         }
         
         // 如果已经停止了，就重启震动

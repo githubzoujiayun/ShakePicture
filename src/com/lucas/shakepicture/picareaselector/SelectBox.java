@@ -12,7 +12,7 @@ public class SelectBox extends View {
     private float left, top, right, bottom;
                 
     private static final int FRAME_WIDTH = 5;  // 边框线的宽度
-    private static final int ERROR_RANGE = 10;   // 误差范围，因手指较粗不可能精确点击
+    private static final int ERROR_RANGE = 20;   // 误差范围，因手指较粗不可能精确点击
         
     // 考虑了误差(Error Range)后的范围值
     private float leftER, topER, rightER, bottomER, frameWidthER;
@@ -92,9 +92,6 @@ public class SelectBox extends View {
     // 判断一个点与此选择框的位置关系
     public Position getPosition(float x, float y) {
         calLocalWithErrorRange();
-
-  //       String s = String.format("%f, %f, %f, %f, %f, %f, %f", x, y, top, top + frameWidthER, rightER, topER, bottomER);
-   //      Log.e("", s);
 
         if (x < leftER || x > rightER || y < topER || y > bottomER)
             return new Position(Position.Dir.OUT);

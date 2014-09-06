@@ -5,10 +5,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
+import net.youmi.android.AdManager;
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
+import net.youmi.android.diy.DiyManager;
+import net.youmi.android.spot.SpotManager;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
@@ -17,11 +25,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +39,6 @@ import android.widget.Toast;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
 import com.lucas.shakepicture.pictureselector.PicWallActivity;
-import com.lucas.util.AndroidUtil;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
 
@@ -50,10 +59,23 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
-        int w = AndroidUtil.getScreenWidth(this);
-        int h = AndroidUtil.getScreenHeight(this);
-        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
+//        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
+//        int w = AndroidUtil.getScreenWidth(this);
+//        int h = AndroidUtil.getScreenHeight(this);
+//        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
+        
+        // 初始化应用的发布 ID 和密钥，以及设置测试模式
+        AdManager.getInstance(this).init(YouMi.APP_ID, YouMi.APP_SECRET_KEY, false);
+        
+        // 初始化插屏广告接口
+        SpotManager.getInstance(this).loadSpotAds();        
+        
+        SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
+        int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
+        
+        Editor editor = sp.edit();
+        editor.putInt(Common.SPKeyBootCount, ++bootCount);
+        editor.commit();
         
         if(!isAddShortCut()) 
             addShortCut();
@@ -99,6 +121,15 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uriTakePic);
                 startActivityForResult(intent, TAKE_PIC);
+            }
+        });
+        
+        findViewById(R.id.app_recommend).setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                // 显示有米推荐墙广告
+                DiyManager.showRecommendWall(MainActivity.this);
             }
         });
     }
@@ -153,6 +184,14 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
     
+    @Override
+    protected void onDestroy() {
+        // 注销有米插屏广告广播
+        SpotManager.getInstance(this) .unregisterSceenReceiver();
+        
+        super.onDestroy();
+    }
+
     private long exitTime = 0;
 
     // 再按一次退出程序的实现

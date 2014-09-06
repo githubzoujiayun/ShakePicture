@@ -3,6 +3,9 @@ package com.lucas.shakepicture.pictureselector;
 import java.io.IOException;
 import java.util.Arrays;
 
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
@@ -51,6 +55,11 @@ public class PicWallActivity extends Activity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true); // 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
         actionBar.setDisplayShowHomeEnabled(true);  //使左上角图标可点击，对应id为android.R.id.home，对应ActionBar.DISPLAY_SHOW_HOME
+        
+        // 加入有米广告条
+        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
+        LinearLayout adLayout=(LinearLayout)findViewById(R.id.adLayout);
+        adLayout.addView(adView);
                 
         try {
             picPathArr = getAssets().list("belle");

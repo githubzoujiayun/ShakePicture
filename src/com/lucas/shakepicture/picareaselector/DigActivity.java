@@ -4,6 +4,8 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,6 +60,14 @@ public class DigActivity extends Activity {
         super.onCreate(savedInstanceState);        
         setContentView(R.layout.activity_dig); 
         
+        // 设置有米悬浮广告条
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams( 
+                                    FrameLayout.LayoutParams.FILL_PARENT,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL; 
+        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
+        addContentView(adView, layoutParams);
+        
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
@@ -74,8 +84,7 @@ public class DigActivity extends Activity {
                     return;
                 }
 
-                bitmap = bitmapAdaptScreen(BitmapFactory
-                        .decodeFileDescriptor(fd));
+                bitmap = bitmapAdaptScreen(BitmapFactory .decodeFileDescriptor(fd));
                 if (bitmap == null) {
                     // ///////////////////////////////////////////////////////////////////////
                     return;
