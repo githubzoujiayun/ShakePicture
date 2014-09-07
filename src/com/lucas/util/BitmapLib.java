@@ -21,89 +21,89 @@ public class BitmapLib {
          */
     }
     
-    public static Bitmap decodeBitmap(Context context, String picPath, int w, int h, PicZoomOutType zoomOutType) {
-        if(w < 0 || h < 0) {
-            throw new IllegalArgumentException("w, h必须都大于0");
-        }
-
-        int screenWidth = AndroidUtil.getScreenWidth(context);
-        int screenHeight = AndroidUtil.getScreenHeight(context);
-        
-        // 防止图片过大，显示不出来
-        if (w > screenWidth) { // 宽度的最大值
-            w = screenWidth;
-        }
-
-        if (h > screenHeight) { // 高度的最大值
-            h = screenHeight;
-        } 
-        
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeFile(picPath, options);
-
-        // 取两者中小的一个， 保证缩小后的图片比需要的图片大
-        options.inSampleSize = Math.min(options.outWidth / w, options.outHeight / h);
-        options.inJustDecodeBounds = false;
-        
-        Bitmap bitmap = BitmapFactory.decodeFile(picPath, options);
-        if(bitmap == null) {
-            return null;
-        }
-        
-        int btW = bitmap.getWidth();
-        int btH = bitmap.getHeight();
-        
-        if(btW <= w && btH <= h) {
-            return bitmap;
-        }
-
-        switch (zoomOutType) {
-        case DIG_CENTER:
-            int x = btW - w;
-            int y = btH - h;
-            
-            int finalW = 0;
-            int finalH = 0;
-            if(x <= 0) {
-                x = 0;
-                finalW = btW;
-            } else {
-                x /= 2;
-                finalW = w;
-            }
-            
-            if (y <= 0) {
-                y = 0;
-                finalH = btH;
-            } else {
-                y /= 2;
-                finalH = h;
-            }
-
-            /*
-             * Bitmap.createBitmap函数要求： 
-             * x + width must be <= bitmap.width()
-             * y + height must be <= bitmap.height()
-             */
-            return Bitmap.createBitmap(bitmap, x, y, finalW, finalH);
-        case ZOOM_OUT:            
-            if(btW > w) {
-                // 宽度上压缩了多少，高度上也要同样压缩多少
-                float ratio = w / (float)btW;
-                return Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
-            }
-            break;
-        case FILL:
-            float ratio = w / (float)btW;
-            return Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
-        default:
-            break;
-        }
-
-        return null;       
-    }
+//    public static Bitmap decodeBitmap(Context context, String picPath, int w, int h, PicZoomOutType zoomOutType) {
+//        if(w < 0 || h < 0) {
+//            throw new IllegalArgumentException("w, h必须都大于0");
+//        }
+//
+//        int screenWidth = AndroidUtil.getScreenWidth(context);
+//        int screenHeight = AndroidUtil.getScreenHeight(context);
+//        
+//        // 防止图片过大，显示不出来
+//        if (w > screenWidth) { // 宽度的最大值
+//            w = screenWidth;
+//        }
+//
+//        if (h > screenHeight) { // 高度的最大值
+//            h = screenHeight;
+//        } 
+//        
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inJustDecodeBounds = true;
+//
+//        BitmapFactory.decodeFile(picPath, options);
+//
+//        // 取两者中小的一个， 保证缩小后的图片比需要的图片大
+//        options.inSampleSize = Math.min(options.outWidth / w, options.outHeight / h);
+//        options.inJustDecodeBounds = false;
+//        
+//        Bitmap bitmap = BitmapFactory.decodeFile(picPath, options);
+//        if(bitmap == null) {
+//            return null;
+//        }
+//        
+//        int btW = bitmap.getWidth();
+//        int btH = bitmap.getHeight();
+//        
+//        if(btW <= w && btH <= h) {
+//            return bitmap;
+//        }
+//
+//        switch (zoomOutType) {
+//        case DIG_CENTER:
+//            int x = btW - w;
+//            int y = btH - h;
+//            
+//            int finalW = 0;
+//            int finalH = 0;
+//            if(x <= 0) {
+//                x = 0;
+//                finalW = btW;
+//            } else {
+//                x /= 2;
+//                finalW = w;
+//            }
+//            
+//            if (y <= 0) {
+//                y = 0;
+//                finalH = btH;
+//            } else {
+//                y /= 2;
+//                finalH = h;
+//            }
+//
+//            /*
+//             * Bitmap.createBitmap函数要求： 
+//             * x + width must be <= bitmap.width()
+//             * y + height must be <= bitmap.height()
+//             */
+//            return Bitmap.createBitmap(bitmap, x, y, finalW, finalH);
+//        case ZOOM_OUT:            
+//            if(btW > w) {
+//                // 宽度上压缩了多少，高度上也要同样压缩多少
+//                float ratio = w / (float)btW;
+//                return Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
+//            }
+//            break;
+//        case FILL:
+//            float ratio = w / (float)btW;
+//            return Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
+//        default:
+//            break;
+//        }
+//
+//        return null;       
+//    }
     
     public static Bitmap decodeBitmap(Context context, InputStream is, int w, int h, PicZoomOutType zoomOutType) {     
         if(w < 0 || h < 0) {
@@ -127,11 +127,27 @@ public class BitmapLib {
 
         BitmapFactory.decodeStream(is, null, options);
 
-        // 取两者中小的一个， 保证缩小后的图片比需要的图片大
+        // 取两者中较小的一个， 保证缩小后的图片比需要的图片大
         options.inSampleSize = Math.min(options.outWidth / w, options.outHeight / h);
         options.inJustDecodeBounds = false;
         
-        Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
+        Bitmap bitmap = null;
+        try {
+            /*
+             * 在http://www.testin.cn上测试时，发现有的机型报了OutOfMemoryError错误而崩溃
+             */
+            bitmap = BitmapFactory.decodeStream(is, null, options);
+        } catch(OutOfMemoryError e) {
+            // 既然内存不够，就取两者中较大的一个，缩的更小一点试试
+            options.inSampleSize = Math.max(options.outWidth / w, options.outHeight / h);
+            try {
+                bitmap = BitmapFactory.decodeStream(is, null, options);
+            } catch(OutOfMemoryError e1) {
+                // 内存还不够？！不解了！！！
+                return null;
+            }
+        }
+        
         if(bitmap == null) {
             return null;
         }
@@ -171,20 +187,42 @@ public class BitmapLib {
              * x + width must be <= bitmap.width()
              * y + height must be <= bitmap.height()
              */
-            return Bitmap.createBitmap(bitmap, x, y, finalW, finalH);
-        case ZOOM_OUT:   
-            if(btW <= w && btH <= h) {
+            Bitmap bt = null;
+            try {
+                /*
+                 * 在http://www.testin.cn上测试时，有极个别机型报了OutOfMemoryError错误而崩溃
+                 */
+                bt = Bitmap.createBitmap(bitmap, x, y, finalW, finalH);
+            } catch (OutOfMemoryError e) {
+                /*
+                 * 这里直接返回原图好了
+                 */
                 return bitmap;
             }
-            if(btW > w) {
-                // 宽度上压缩了多少，高度上也要同样压缩多少
-                float ratio = w / (float)btW;
-                return Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
+            return bt;
+        case ZOOM_OUT:   
+            if(btW <= w) {
+                return bitmap;
             }
-            break;
+            // 没有break，直接进入FILL中
         case FILL:
+            // 宽度上压缩了多少，高度上也要同样压缩多少
             float ratio = w / (float)btW;
-            return Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
+            
+            Bitmap bt1 = null;
+            try {
+                /*
+                 * 在http://www.testin.cn上测试时，有极个别机型报了OutOfMemoryError错误而崩溃
+                 */
+                bt1 = Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
+            } catch (OutOfMemoryError e) {
+                /*
+                 * 能报OutOfMemoryError错误，应该是w > btW，放大图片是OOM的
+                 * 这里直接返回原图好了
+                 */
+                return bitmap;
+            }
+            return bt1;
         default:
             break;
         }

@@ -1,13 +1,12 @@
 package com.lucas.shakepicture;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
 import net.youmi.android.AdManager;
-import net.youmi.android.banner.AdSize;
-import net.youmi.android.banner.AdView;
 import net.youmi.android.diy.DiyManager;
 import net.youmi.android.spot.SpotManager;
 import android.app.Activity;
@@ -24,14 +23,14 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.provider.MediaStore;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +53,8 @@ public class MainActivity extends Activity {
     private static final int SELECT_BUILD_IN_PIC = 2; // 选择应用自带图片
     
     private Uri uriTakePic;         // 拍照时，拍照后图片的Uri
+    
+    private WakeLock wakeLock;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,11 @@ public class MainActivity extends Activity {
         
         if(!isAddShortCut()) 
             addShortCut();
+        
+        // 保持屏幕不灭
+        PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);  
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");  
+        wakeLock.acquire();  
         
         // 启动标题抖动效果
         TextView tv = (TextView) findViewById(R.id.title);
@@ -122,7 +128,15 @@ public class MainActivity extends Activity {
         photographTv.setOnClickListener(new OnClickListener() {
             
             public void onClick(View v) {
-                uriTakePic = Uri.fromFile(Common.getFileInSdcardByName(MainActivity.this, "camera_raw.jpg", true));
+                File f = Common.getFileInSdcardByName(MainActivity.this, "camera_raw.jpg", true);
+                if(f == null) {
+                    Toast.makeText(MainActivity.this, 
+                            MainActivity.this.getResources().getString(R.string.not_find_sd_card), 
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+                
+                uriTakePic = Uri.fromFile(f);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uriTakePic);
                 startActivityForResult(intent, TAKE_PIC);
@@ -194,6 +208,9 @@ public class MainActivity extends Activity {
         // 注销有米插屏广告广播
         SpotManager.getInstance(this) .unregisterSceenReceiver();
         
+        // 熄灭屏幕
+        wakeLock.release(); 
+        
         super.onDestroy();
     }
 
@@ -232,17 +249,15 @@ public class MainActivity extends Activity {
     
     private void addShortCut(){        
         Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-        // 设置属性
+
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
-        ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this.getApplicationContext(), R.drawable.icon);
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON,iconRes);
  
         // 是否允许重复创建
         shortcut.putExtra("duplicate", false);
         
         //设置桌面快捷方式的图标
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(this,R.drawable.icon);        
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,icon);
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(this, R.drawable.icon);        
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
         
         //点击快捷方式的操作
         Intent intent = new Intent(Intent.ACTION_MAIN);

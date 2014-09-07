@@ -19,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.lucas.shakepicture.R;
+import com.lucas.util.AndroidUtil;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
 
@@ -86,7 +87,12 @@ public class PicWallAdapter extends ArrayAdapter<String> {
        
         final String picPath = getItem(position);
         GridView gv = (GridView) parent;
-        final int w = gv.getColumnWidth();
+        
+        // 算每列的宽度，getColumnWidth函数式SDK16以上才有的，所以只好用下面的本办法算下
+   //     final int w = gv.getColumnWidth();
+        int screenW = AndroidUtil.getScreenWidth(context);
+        // XML文件里面设的是列间距3dp
+        final int w = (screenW - 2 * (AndroidUtil.dp2px(context, 3)))/3;
         
         Bitmap bitmap = picCache.get(position);
         if(bitmap != null) {

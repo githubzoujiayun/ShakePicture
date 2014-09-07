@@ -11,16 +11,6 @@
         android:layout_gravity="center"
         android:background="@color/black" />
 
-    <!-- 最好搞成半透明的 -->
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:alpha="0.75"
-        android:text="广告位！！！"
-        android:background="#3F000000" />
-
     <!--
         底部操作栏 
     	background透明度，前两位设置，范围[0-FF]

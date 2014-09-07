@@ -7,6 +7,7 @@
     <string name="select_pic">选择图片</string>
     <string name="select_done">选定</string>
     <string name="photograph">相机拍照</string>
+    <string name="not_find_sd_card">没有找到SD卡，无法启动摄像头</string>
     <string name="gif_pics">GIF图库</string>
     <string name="click_again_exit">再按一次退出程序</string>
     <string name="shake">抖一抖</string>
