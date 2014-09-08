@@ -27,8 +27,8 @@
     <string name="area_not_coincide">添加失败，添加的区域不能重合</string>
     <string name="area_exist">添加失败，当前区域已存在</string>
     <string name="double_click_delete">双击删除</string>
-    <string name="cancle">取消</string>
+    <string name="cancle">返回</string>
     <string name="add">添加</string>
-    <string name="play">完成</string>
+    <string name="play">开始</string>
 
 </resources>

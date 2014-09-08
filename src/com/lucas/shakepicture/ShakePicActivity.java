@@ -63,6 +63,7 @@ public class ShakePicActivity extends Activity {
                                     FrameLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL; 
         AdView adView = new AdView(this, AdSize.FIT_SCREEN);
+        adView.setAlpha((float) 0.5);
         addContentView(adView, layoutParams);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);

@@ -51,13 +51,13 @@
         <activity
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" 
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" 
             android:name="com.lucas.shakepicture.ShakePicActivity" >
         </activity>
         
         <activity
             android:name="com.lucas.shakepicture.picareaselector.DigActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" 
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" 
             android:screenOrientation="portrait" >
         </activity>
         
