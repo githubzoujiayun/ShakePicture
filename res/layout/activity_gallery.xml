@@ -2,15 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/black" >
     
+    <!-- 广告位 -->
     <LinearLayout
         android:id="@+id/adLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true" >
     </LinearLayout>
     

@@ -4,16 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 
-import net.youmi.android.AdManager;
 import net.youmi.android.diy.DiyManager;
 import net.youmi.android.spot.SpotManager;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Intent.ShortcutIconResource;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -26,6 +25,7 @@ import android.os.Parcelable;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,6 +40,16 @@ import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener
 import com.lucas.shakepicture.pictureselector.PicWallActivity;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
+import com.lucas.util.AdHelper;
+import com.lucas.util.PhoneLang;
+import com.lucas.util.StartApp;
+import com.lucas.util.YouMi;
+import com.startapp.android.publish.Ad;
+import com.startapp.android.publish.AdEventListener;
+import com.startapp.android.publish.nativead.NativeAdDetails;
+import com.startapp.android.publish.nativead.NativeAdPreferences;
+import com.startapp.android.publish.nativead.NativeAdPreferences.NativeAdBitmapSize;
+import com.startapp.android.publish.nativead.StartAppNativeAd;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends Activity {
@@ -59,19 +69,17 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        YouMi.init(this);       
+        StartApp.init(this);
+        
         setContentView(R.layout.activity_main);
         
 //        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
 //        int w = AndroidUtil.getScreenWidth(this);
 //        int h = AndroidUtil.getScreenHeight(this);
 //        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
-        
-        // 初始化应用的发布 ID 和密钥，以及设置测试模式
-        AdManager.getInstance(this).init(YouMi.APP_ID, YouMi.APP_SECRET_KEY, false);
-        
-        // 初始化插屏广告接口
-        SpotManager.getInstance(this).loadSpotAds();        
-        
+
         SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
         int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
         
@@ -143,14 +151,26 @@ public class MainActivity extends Activity {
             }
         });
         
-        findViewById(R.id.app_recommend).setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                // 显示有米推荐墙广告
-                DiyManager.showRecommendWall(MainActivity.this);
-            }
-        });
+        // 推荐墙广告
+        View appRecommend = findViewById(R.id.app_recommend);
+        switch (PhoneLang.getCurrPhoneLang(this)) {
+        case CN:
+        case TW:
+            break;
+
+        default:
+            appRecommend.setVisibility(View.INVISIBLE);
+            break;
+        }
+        
+        appRecommend.setOnClickListener(
+            new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    DiyManager.showRecommendWall(MainActivity.this);
+                }
+       });
     }
     
     private OnSelectDoneListener onSelectDonwListener = new OnSelectDoneListener() {

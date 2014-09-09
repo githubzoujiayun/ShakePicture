@@ -33,8 +33,13 @@ import android.widget.TextView;
 
 import com.lucas.shakepicture.Common;
 import com.lucas.shakepicture.R;
+import com.lucas.util.AdHelper;
 import com.lucas.util.BitmapLib;
+import com.lucas.util.PhoneLang;
 import com.lucas.util.BitmapLib.PicZoomOutType;
+import com.lucas.util.PhoneLang.Language;
+import com.startapp.android.publish.StartAppAd;
+import com.startapp.android.publish.banner.Banner;
 
 public class GalleryActivity extends Activity {
     
@@ -57,6 +62,9 @@ public class GalleryActivity extends Activity {
     
     private boolean exit = false;
     
+    // startapp 插屏广告
+    private StartAppAd startAppAd;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,26 +75,40 @@ public class GalleryActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
         actionBar.setDisplayShowHomeEnabled(true);  //使左上角图标可点击，对应id为android.R.id.home，对应ActionBar.DISPLAY_SHOW_HOME
         
-        // 加入有米广告条
-        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
-        LinearLayout adLayout=(LinearLayout)findViewById(R.id.adLayout);
-        adLayout.addView(adView);
+        startAppAd = new StartAppAd(this);
+        
+        // 加入广告条
+        LinearLayout adLayout = (LinearLayout)findViewById(R.id.adLayout);
+        adLayout.addView(AdHelper.getBanner(this, 1));
 
         SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
         int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
         /*
          * 前10次启动不展示插屏广告，原因：
-         * 1. 在各个市场审核阶段，广告显示不出来（那些变态不会把应用连启10此吧？）
+         * 1. 在各个市场审核阶段，广告显示不出来（那些变态不会把应用连启10次吧？）
          * 2. 用户刚开始使用时有一个好的体验
          */
         if(bootCount > 10) { 
-            // 展示有米插屏广告
+            // 展示插屏广告
             final SpotManager spotManager = SpotManager.getInstance(this);
             final Handler handler = new Handler(new Handler.Callback() {
                 
+                private Language lang = PhoneLang.getCurrPhoneLang(GalleryActivity.this);
+                
                 @Override
                 public boolean handleMessage(Message msg) {
-                    spotManager.showSpotAds(GalleryActivity.this);
+                    switch (lang) {
+                    case CN:
+                        spotManager.showSpotAds(GalleryActivity.this);
+                        break;
+                    case TW:
+                        spotManager.showSpotAds(GalleryActivity.this);
+                        break;
+                    default:
+                        startAppAd.showAd();
+                        startAppAd.loadAd();
+                        break;
+                    }
                     return false;
                 }
             });
@@ -97,8 +119,8 @@ public class GalleryActivity extends Activity {
                 public void run() {
                     while(true) {
                         try {
-                            // 每20s展示一次插屏广告
-                            Thread.sleep(20 * 1000);
+                            // 每30s展示一次插屏广告
+                            Thread.sleep(30 * 1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -216,6 +238,18 @@ public class GalleryActivity extends Activity {
         }
         
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startAppAd.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        startAppAd.onPause();
     }
 
     @Override

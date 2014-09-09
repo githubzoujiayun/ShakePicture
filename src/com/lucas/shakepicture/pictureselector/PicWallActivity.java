@@ -12,14 +12,19 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import com.lucas.shakepicture.R;
+import com.lucas.util.AdHelper;
+import com.lucas.util.PhoneLang;
+import com.startapp.android.publish.banner.Banner;
 
 public class PicWallActivity extends Activity {
     
@@ -54,12 +59,11 @@ public class PicWallActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true); // 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
-        actionBar.setDisplayShowHomeEnabled(true);  //使左上角图标可点击，对应id为android.R.id.home，对应ActionBar.DISPLAY_SHOW_HOME
+        actionBar.setDisplayShowHomeEnabled(true);  //使左上角图标可点击，对应id为android.R.id.home，对应ActionBar.DISPLAY_SHOW_HOME              
         
-        // 加入有米广告条
-        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
-        LinearLayout adLayout=(LinearLayout)findViewById(R.id.adLayout);
-        adLayout.addView(adView);
+        // 加入广告条
+        LinearLayout adLayout = (LinearLayout)findViewById(R.id.adLayout);
+        adLayout.addView(AdHelper.getBanner(this, 1));
                 
         try {
             picPathArr = getAssets().list("belle");

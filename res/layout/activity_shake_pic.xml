@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+    
     <com.lucas.shakepicture.VerticesView
         android:id="@+id/verticesView"
         android:layout_width="match_parent"
@@ -89,6 +89,6 @@
             android:alpha="0.75"
             android:textColor="@color/white"
             android:visibility="invisible" />
-    </RelativeLayout>
+    </RelativeLayout>   
 
 </FrameLayout>

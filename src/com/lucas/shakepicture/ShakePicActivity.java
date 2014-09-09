@@ -28,7 +28,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
+import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
+import com.lucas.util.PhoneLang;
+import com.startapp.android.publish.banner.Banner;
 
 public class ShakePicActivity extends Activity {
 
@@ -48,8 +51,7 @@ public class ShakePicActivity extends Activity {
         context.startActivity(intent);
     }
     
-    private VerticesView verticesView;
-    
+    private VerticesView verticesView;    
     private SensorManager sensorManager;
     
     @Override
@@ -57,14 +59,13 @@ public class ShakePicActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake_pic);
         
-        // 设置有米悬浮广告条
+        // 设置悬浮广告条
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams( 
-                                    FrameLayout.LayoutParams.FILL_PARENT,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
                                     FrameLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL; 
-        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
-        adView.setAlpha((float) 0.5);
-        addContentView(adView, layoutParams);
+ 
+        addContentView(AdHelper.getBanner(this, (float) 0.75), layoutParams);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER); // 加速度传感器

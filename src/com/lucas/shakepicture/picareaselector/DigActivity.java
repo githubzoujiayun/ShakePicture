@@ -28,7 +28,10 @@ import com.lucas.shakepicture.R;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
 import com.lucas.shakepicture.picareaselector.RectSelectableImageView.AddAreaResult;
 import com.lucas.shakepicture.picareaselector.SelectBox.Position;
+import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
+import com.lucas.util.PhoneLang;
+import com.startapp.android.publish.banner.Banner;
 
 public class DigActivity extends Activity {
     
@@ -60,14 +63,13 @@ public class DigActivity extends Activity {
         super.onCreate(savedInstanceState);        
         setContentView(R.layout.activity_dig); 
         
-        // 设置有米悬浮广告条
+        // 设置悬浮广告条
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams( 
-                                    FrameLayout.LayoutParams.FILL_PARENT,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
                                     FrameLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL; 
-        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
-        adView.setAlpha((float) 0.5);
-        addContentView(adView, layoutParams);
+        
+        addContentView(AdHelper.getBanner(this, (float) 0.75), layoutParams);
         
         Bundle bundle = getIntent().getExtras();
 
