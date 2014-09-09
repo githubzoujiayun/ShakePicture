@@ -30,5 +30,7 @@
     <string name="cancle">返回</string>
     <string name="add">添加</string>
     <string name="play">开始</string>
+    
+    <string name="oom">空间不足，解析图片失败</string>
 
 </resources>

@@ -64,14 +64,19 @@ public class PicWallActivity extends Activity {
         // 加入广告条
         LinearLayout adLayout = (LinearLayout)findViewById(R.id.adLayout);
         adLayout.addView(AdHelper.getBanner(this, 1));
-                
+        
+        Log.e("TTT", "WWWWW");
+        
         try {
             picPathArr = getAssets().list("belle");
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("", e.getMessage());
+            Log.e("TTT", e.getMessage());
             return ;
         }
+        
+        Log.e("TTT", "picPathArr.length: " + picPathArr.length);
+        
         for(int i = 0; i < picPathArr.length; i++) {
             picPathArr[i] = "belle/" + picPathArr[i];
         }

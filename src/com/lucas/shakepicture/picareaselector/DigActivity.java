@@ -69,7 +69,7 @@ public class DigActivity extends Activity {
                                     FrameLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL; 
         
-        addContentView(AdHelper.getBanner(this, (float) 0.75), layoutParams);
+        addContentView(AdHelper.getBanner(this, 1), layoutParams);
         
         Bundle bundle = getIntent().getExtras();
 
@@ -78,18 +78,21 @@ public class DigActivity extends Activity {
             if (bitmapUri != null) {
                 FileDescriptor fd = null;
                 try {
-                    fd = getContentResolver()
-                            .openFileDescriptor(bitmapUri, "r")
-                            .getFileDescriptor();
+                    fd = getContentResolver().openFileDescriptor(bitmapUri, "r").getFileDescriptor();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     // ///////////////////////////////////////////////////////////////////////
                     return;
                 }
 
-                bitmap = bitmapAdaptScreen(BitmapFactory .decodeFileDescriptor(fd));
+                try {
+                    bitmap = bitmapAdaptScreen(BitmapFactory .decodeFileDescriptor(fd));
+                }catch (OutOfMemoryError e) {
+                    e.printStackTrace();
+                }
+                
                 if (bitmap == null) {
-                    // ///////////////////////////////////////////////////////////////////////
+                    Toast.makeText(this, getResources().getString(R.string.oom), Toast.LENGTH_LONG).show();
                     return;
                 }
             } else {
@@ -173,7 +176,11 @@ public class DigActivity extends Activity {
         }
         
         if(ratio < 1) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, (int)(bmW * ratio), (int)(bmH * ratio), false);
+            try {
+                bitmap = Bitmap.createScaledBitmap(bitmap, (int)(bmW * ratio), (int)(bmH * ratio), false);
+            } catch(OutOfMemoryError e) {
+                e.printStackTrace();
+            }
         }
         
         return bitmap;

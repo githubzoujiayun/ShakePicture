@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
 import com.lucas.shakepicture.pictureselector.PicWallActivity;
+import com.lucas.util.AndroidUtil;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
 import com.lucas.util.AdHelper;
@@ -75,10 +76,10 @@ public class MainActivity extends Activity {
         
         setContentView(R.layout.activity_main);
         
-//        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
-//        int w = AndroidUtil.getScreenWidth(this);
-//        int h = AndroidUtil.getScreenHeight(this);
-//        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
+        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
+        int w = AndroidUtil.getScreenWidth(this);
+        int h = AndroidUtil.getScreenHeight(this);
+        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
 
         SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
         int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
@@ -204,7 +205,9 @@ public class MainActivity extends Activity {
         } else if (requestCode == SELECT_PIC && data != null) { // 选择一张本地图片
             // 得到图片的全路径
             Uri uri = data.getData();
-            PicAreaSelect.startSelect(this, uri, onSelectDonwListener);
+            if(uri != null) {
+                PicAreaSelect.startSelect(this, uri, onSelectDonwListener);
+            }
         } else if(requestCode == SELECT_BUILD_IN_PIC && data != null) {
             String picPath = data.getExtras().getString("picPath");
             InputStream is = null;

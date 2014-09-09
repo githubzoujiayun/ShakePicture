@@ -5,6 +5,7 @@ import java.io.InputStream;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 
 public class BitmapLib {
@@ -138,12 +139,14 @@ public class BitmapLib {
              */
             bitmap = BitmapFactory.decodeStream(is, null, options);
         } catch(OutOfMemoryError e) {
+            Log.e("TTT", "OutOfMemoryError: 放大缩放比例再试一下");
             // 既然内存不够，就取两者中较大的一个，缩的更小一点试试
             options.inSampleSize = Math.max(options.outWidth / w, options.outHeight / h);
             try {
                 bitmap = BitmapFactory.decodeStream(is, null, options);
             } catch(OutOfMemoryError e1) {
                 // 内存还不够？！不解了！！！
+                Log.e("TTT", "OutOfMemoryError: 放大了缩放比例还是不行，返回null");
                 return null;
             }
         }
@@ -197,29 +200,35 @@ public class BitmapLib {
                 /*
                  * 这里直接返回原图好了
                  */
+                Log.e("TTT", "OutOfMemoryError: 挖图失败，返回原图");
                 return bitmap;
             }
             return bt;
         case ZOOM_OUT:   
-            if(btW <= w) {
+            if(btW <= w && btH <= h) {
                 return bitmap;
             }
             // 没有break，直接进入FILL中
         case FILL:
-            // 宽度上压缩了多少，高度上也要同样压缩多少
-            float ratio = w / (float)btW;
+            float scaledW = w;
+            float scaleH = btH * (w / (float)btW);
+            if(scaleH > h) {
+                scaledW *= h / (float)scaleH;
+                scaleH = h;
+            }
             
             Bitmap bt1 = null;
             try {
                 /*
                  * 在http://www.testin.cn上测试时，有极个别机型报了OutOfMemoryError错误而崩溃
                  */
-                bt1 = Bitmap.createScaledBitmap(bitmap, w, (int)(btH * ratio), false);
+                bt1 = Bitmap.createScaledBitmap(bitmap, (int)scaledW, (int)scaleH, false);
             } catch (OutOfMemoryError e) {
                 /*
                  * 能报OutOfMemoryError错误，应该是w > btW，放大图片是OOM的
                  * 这里直接返回原图好了
                  */
+                Log.e("TTT", "OutOfMemoryError: 放大图片失败，返回原图");
                 return bitmap;
             }
             return bt1;
