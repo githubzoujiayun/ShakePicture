@@ -43,7 +43,6 @@ public class Common {
             try {
                 f.createNewFile();
             } catch (IOException e) {
-                Log.e("", "fffff   " + e.getMessage());
             }
 
         }

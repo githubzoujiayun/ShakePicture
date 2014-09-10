@@ -103,6 +103,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-		android:text="Emai: jiayangcg@hotmail.com" />
+		android:text="Emai: jiayangcg@hotmail.com" />    
 
 </RelativeLayout>

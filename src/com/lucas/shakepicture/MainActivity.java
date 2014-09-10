@@ -10,6 +10,7 @@ import java.util.Set;
 import net.youmi.android.diy.DiyManager;
 import net.youmi.android.spot.SpotManager;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +69,8 @@ public class MainActivity extends Activity {
     
     private WakeLock wakeLock;
     
+    private ProgressDialog progressDialog;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,10 +80,10 @@ public class MainActivity extends Activity {
         
         setContentView(R.layout.activity_main);
         
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
-        int w = AndroidUtil.getScreenWidth(this);
-        int h = AndroidUtil.getScreenHeight(this);
-        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
+//        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
+//        int w = AndroidUtil.getScreenWidth(this);
+//        int h = AndroidUtil.getScreenHeight(this);
+//        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
 
         SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
         int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
@@ -88,13 +92,18 @@ public class MainActivity extends Activity {
         editor.putInt(Common.SPKeyBootCount, ++bootCount);
         editor.commit();
         
+        if(bootCount == 1) {
+            /*
+             *  首次启动，创建一下桌面快捷方式
+             *  以后将不再做检查
+             */
+            addShortCut();
+        }
+        
         // 检查更新（使用友盟的接口）
         UmengUpdateAgent.setDeltaUpdate(false); // true增量更新，设为false则为全量更新
         UmengUpdateAgent.update(this);
-        
-        if(!isAddShortCut()) 
-            addShortCut();
-        
+                
         // 保持屏幕不灭
         PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);  
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");  
@@ -129,6 +138,11 @@ public class MainActivity extends Activity {
         appBuildInPicTv.setOnClickListener(new OnClickListener() {
             
             public void onClick(View v) {
+                progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setMessage(MainActivity.this.getResources().getString(R.string.loading));
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                
                 PicWallActivity.startForResult(MainActivity.this, SELECT_BUILD_IN_PIC);
             }
         });
@@ -227,6 +241,16 @@ public class MainActivity extends Activity {
     }
     
     @Override
+    protected void onStop() {
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+        
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         // 注销有米插屏广告广播
         SpotManager.getInstance(this) .unregisterSceenReceiver();
@@ -254,6 +278,10 @@ public class MainActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
     
+    /**
+     * 此函数无法正常工作
+     * @return
+     */
     private boolean isAddShortCut() {
         final ContentResolver resolver = this.getContentResolver();
 

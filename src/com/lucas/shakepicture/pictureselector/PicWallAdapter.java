@@ -10,6 +10,9 @@ import java.util.Set;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.lucas.shakepicture.R;
 import com.lucas.util.AndroidUtil;
@@ -34,7 +38,7 @@ public class PicWallAdapter extends ArrayAdapter<String> {
      * 当快速连续两次new此类对象时，会因为前一个对象的图片解码没有完成导致第二次打开activity明显黑屏，
      * 所以这里记录一下第一次的所有任务，在第二次打开之前需cancel掉第一个的所有任务
      */
-    private Set<AsyncTask<Integer, Void, Bitmap>> allTasks = new HashSet<AsyncTask<Integer, Void, Bitmap>>();
+    private Set<AsyncTask<Object, Void, Bitmap>> allTasks = new HashSet<AsyncTask<Object, Void, Bitmap>>();
 
     public PicWallAdapter(Context context, int resource, List<String> objects) {
         super(context, resource, objects);
@@ -62,94 +66,143 @@ public class PicWallAdapter extends ArrayAdapter<String> {
 
         };
     }
-
-     int i = 0;
-    
+        
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        
         if(convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.pic_wall_item, null);  
-            
-            Holder holder = new Holder();
-            holder.iv = (ImageView) convertView.findViewById(R.id.image);
-            convertView.setTag(holder);
         } 
         
-        final Holder holder = (Holder) convertView.getTag();
-        final ImageView iv = holder.iv;    
-        
-        if(holder.task != null && !holder.task.isCancelled()) {
-            holder.task.cancel(true);
-        }
-        
-        allTasks.remove(holder.task);
-       
-        final String picPath = getItem(position);
-        GridView gv = (GridView) parent;
-        
+        final ImageView iv = (ImageView) convertView.findViewById(R.id.image);  
         // 算每列的宽度，getColumnWidth函数式SDK16以上才有的，所以只好用下面的本办法算下
    //     final int w = gv.getColumnWidth();
         int screenW = AndroidUtil.getScreenWidth(context);
         // XML文件里面设的是列间距3dp
         final int w = (screenW - 2 * (AndroidUtil.dp2px(context, 3)))/3;
         
+        
         Bitmap bitmap = picCache.get(position);
         if(bitmap != null) {
-            iv.setImageBitmap(bitmap);            
+            iv.setImageBitmap(bitmap);   
             return convertView;
+        } else {
+            iv.setImageResource(R.drawable.empty_photo);
+        }
+                
+        class DecodeBitmap {
+            Bitmap bitmap = null;
         }
         
-        AsyncTask<Integer, Void, Bitmap> task = new AsyncTask<Integer, Void, Bitmap> () {
-
+        final DecodeBitmap dbt = new DecodeBitmap();
+        
+        final Handler handler = new Handler(new Handler.Callback() {
+            
             @Override
-            protected Bitmap doInBackground(Integer... params) {                   
+            public boolean handleMessage(Message msg) {
+                if(dbt.bitmap != null) {
+                    picCache.put(position, dbt.bitmap);
+                    iv.setImageBitmap(dbt.bitmap);
+                } else {
+                    Toast.makeText(context, "内存不足，解码图片失败", Toast.LENGTH_SHORT).show();
+                }
+                
+                return true;
+            }
+        });
+        
+        new Thread(new Runnable() {
+            
+            @Override
+            public void run() {
                 InputStream is = null;
                 try {
-                    is = context.getAssets().open(picPath);
+                    
+                    is = context.getAssets().open(getItem(position));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return null;
+                    handler.sendMessage(handler.obtainMessage());
+                    return;
                 }
 
-                Bitmap bt =  BitmapLib.decodeBitmap(context, is, w, w, PicZoomOutType.DIG_CENTER);
+                dbt.bitmap =  BitmapLib.decodeBitmap(context, is, w, w, PicZoomOutType.DIG_CENTER);
                 try {
                     is.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    handler.sendMessage(handler.obtainMessage());
+                    return;
                 }
-                return bt;
-            }
 
-            @Override
-            protected void onPostExecute(Bitmap result) {
-                if(result != null) {
-                    picCache.put(position, result);
-                    iv.setImageBitmap(result);
-                }
+                handler.sendMessage(handler.obtainMessage());
             }
-            
-        };
-        
-        holder.task = task;
-        allTasks.add(task);
-        task.execute(position);
+        }).start();
         
         return convertView;
     }
+    
+    /*
+    private class DecodePicTask extends AsyncTask<Object, Void, Bitmap> {
 
+        private int position;
+        private ImageView iv;
+        private int w;
+        
+        @Override
+        protected Bitmap doInBackground(Object... params) {   
+            Log.e("TTT", "oooooooooooooooooooooooooooooo");
+
+            position = (Integer) params[0];
+            iv = (ImageView) params[1];
+            w = (Integer) params[2];
+            
+            InputStream is = null;
+            try {
+                
+                is = context.getAssets().open(getItem(position));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("TTT", "11111111111111111111");
+                return null;
+            }
+            Log.e("TTT", "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+            Bitmap bt =  BitmapLib.decodeBitmap(context, is, w, w, PicZoomOutType.DIG_CENTER);
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("TTT", "222222222222222222222222");
+            }
+            Log.e("TTT", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+            return bt;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            if(result != null) {
+                picCache.put(position, result);
+                iv.setImageBitmap(result);
+                allTasks.remove(this);
+                Log.e("TTT", "44444444444444444444444");
+            } else {
+                Log.e("TTT", "3333333333333333333333333");
+                Toast.makeText(context, "内存不足，解码图片失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+        
+    }
+*/
+    
     public void cancelAllTasks() {
-        Iterator<AsyncTask<Integer, Void, Bitmap>> iter = allTasks.iterator();
+        Iterator<AsyncTask<Object, Void, Bitmap>> iter = allTasks.iterator();
 
         while (iter.hasNext()) {
-            AsyncTask<Integer, Void, Bitmap> task = iter.next();
+            AsyncTask<Object, Void, Bitmap> task = iter.next();
             if (!task.isCancelled())
                 task.cancel(true);
         }
     }
-
-    private class Holder {
-        public ImageView iv;
-        public AsyncTask<Integer, Void, Bitmap> task;        
-    }
+//
+//    private class Holder {
+//        public ImageView iv;
+//    }
 }

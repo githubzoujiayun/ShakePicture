@@ -32,5 +32,6 @@
     <string name="play">开始</string>
     
     <string name="oom">空间不足，解析图片失败</string>
+    <string name="loading">加载中…</string>
 
 </resources>

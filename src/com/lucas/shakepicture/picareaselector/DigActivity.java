@@ -87,7 +87,7 @@ public class DigActivity extends Activity {
 
                 try {
                     bitmap = bitmapAdaptScreen(BitmapFactory .decodeFileDescriptor(fd));
-                }catch (OutOfMemoryError e) {
+                } catch (OutOfMemoryError e) {
                     e.printStackTrace();
                 }
                 

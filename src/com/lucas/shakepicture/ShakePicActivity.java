@@ -86,12 +86,9 @@ public class ShakePicActivity extends Activity {
             public void onClick(View v) {
                 List<Bitmap> list = verticesView.getBitmapsOnPath();
                 if(list == null) {
-                    Log.e("", "Bitmap count: " + 0);
                     return;
                 }
-                
-                Log.e("", "Bitmap count: " + list.size());
-                
+                                
                 for(int i = 0; i < list.size(); i++) {
                     File file = Common.getFileInSdcardByName(ShakePicActivity.this, i + ".jpg", true);
                     FileOutputStream out;
