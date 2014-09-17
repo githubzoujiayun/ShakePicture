@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.youmi.android.banner.AdSize;
-import net.youmi.android.banner.AdView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +18,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,8 +26,6 @@ import android.widget.FrameLayout;
 
 import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
-import com.lucas.util.PhoneLang;
-import com.startapp.android.publish.banner.Banner;
 
 public class ShakePicActivity extends Activity {
 

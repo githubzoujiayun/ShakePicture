@@ -4,19 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Set;
 
+import net.youmi.android.AdManager;
 import net.youmi.android.diy.DiyManager;
 import net.youmi.android.spot.SpotManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
@@ -26,33 +24,23 @@ import android.os.Parcelable;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lucas.shakepicture.picareaselector.PicAreaSelect;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
 import com.lucas.shakepicture.pictureselector.PicWallActivity;
-import com.lucas.util.AndroidUtil;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
-import com.lucas.util.AdHelper;
 import com.lucas.util.PhoneLang;
 import com.lucas.util.StartApp;
 import com.lucas.util.YouMi;
-import com.startapp.android.publish.Ad;
-import com.startapp.android.publish.AdEventListener;
-import com.startapp.android.publish.nativead.NativeAdDetails;
-import com.startapp.android.publish.nativead.NativeAdPreferences;
-import com.startapp.android.publish.nativead.NativeAdPreferences.NativeAdBitmapSize;
-import com.startapp.android.publish.nativead.StartAppNativeAd;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends Activity {
@@ -84,6 +72,9 @@ public class MainActivity extends Activity {
 //        int w = AndroidUtil.getScreenWidth(this);
 //        int h = AndroidUtil.getScreenHeight(this);
 //        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
+        
+        // 开启用户数据统计服务,默认不开启，传入 false 值也不开启，只有传入 true 才会调用
+        AdManager.getInstance(this).setUserDataCollect(true);
 
         SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
         int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
@@ -263,7 +254,9 @@ public class MainActivity extends Activity {
 
     private long exitTime = 0;
 
-    // 再按一次退出程序的实现
+    /**
+     * 再按一次退出程序的实现
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -282,6 +275,7 @@ public class MainActivity extends Activity {
      * 此函数无法正常工作
      * @return
      */
+    /*
     private boolean isAddShortCut() {
         final ContentResolver resolver = this.getContentResolver();
 
@@ -297,6 +291,7 @@ public class MainActivity extends Activity {
         
         return false;
     }
+    */
     
     private void addShortCut(){        
         Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");

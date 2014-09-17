@@ -4,8 +4,6 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-import net.youmi.android.banner.AdSize;
-import net.youmi.android.banner.AdView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,8 +28,6 @@ import com.lucas.shakepicture.picareaselector.RectSelectableImageView.AddAreaRes
 import com.lucas.shakepicture.picareaselector.SelectBox.Position;
 import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
-import com.lucas.util.PhoneLang;
-import com.startapp.android.publish.banner.Banner;
 
 public class DigActivity extends Activity {
     

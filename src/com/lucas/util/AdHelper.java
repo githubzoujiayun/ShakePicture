@@ -2,13 +2,10 @@ package com.lucas.util;
 
 import net.youmi.android.banner.AdSize;
 import net.youmi.android.banner.AdView;
+import android.content.Context;
+import android.view.View;
 
 import com.startapp.android.publish.banner.Banner;
-
-import android.content.Context;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.FrameLayout;
 
 /**
  * π„∏Ê÷˙ ÷
