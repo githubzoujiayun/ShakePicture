@@ -16,8 +16,7 @@
     <string name="camera">相机拍照</string>
     <string name="app">精品</string>
     <string name="recommend">推荐</string>
-    
-    
+        
     <string name="select_shake_area">请先选择需要抖动的区域</string>
     <string name="speed_up_shake">晃动手机加快抖动速度</string>
     <string name="change_shake_orientation">点击屏幕改变抖动方向</string>
