@@ -4,7 +4,17 @@
     android:layout_height="match_parent"
     android:background="@android:color/black"  >
     
-    <!-- 广告位 -->
+	<!-- startAppBanner -->
+	<com.startapp.android.publish.banner.Banner 
+          android:id="@+id/startAppBanner"
+          android:layout_width="1dp"
+          android:layout_height="1dp"
+          android:layout_centerHorizontal="true"
+          android:layout_alignParentBottom="true"
+          android:focusable="false"
+          android:clickable="false"/>
+	
+	<!-- 广告位 -->
 	<LinearLayout
         android:id="@+id/adLayout"
         android:layout_width="wrap_content"

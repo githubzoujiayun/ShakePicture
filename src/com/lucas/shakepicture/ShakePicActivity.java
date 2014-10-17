@@ -26,6 +26,8 @@ import android.widget.FrameLayout;
 
 import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
+import com.lucas.util.PhoneLang;
+import com.lucas.util.PhoneLang.Language;
 
 public class ShakePicActivity extends Activity {
 
@@ -54,6 +56,17 @@ public class ShakePicActivity extends Activity {
         setContentView(R.layout.activity_shake_pic);
         
         // 设置悬浮广告条
+        
+        Language currLang = PhoneLang.getCurrPhoneLang(this);
+        if(currLang == Language.CN || currLang == Language.TW) {
+            FrameLayout.LayoutParams parms = new FrameLayout.LayoutParams(1, 1);
+            parms.gravity = Gravity.LEFT; 
+            View adView = AdHelper.getBanner(this, 1, Language.US);
+            adView.setFocusable(false);
+            adView.setClickable(false);
+            addContentView(adView, parms);
+        }
+        
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams( 
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
                                     FrameLayout.LayoutParams.WRAP_CONTENT);

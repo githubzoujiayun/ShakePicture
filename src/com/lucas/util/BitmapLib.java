@@ -21,6 +21,8 @@ public class BitmapLib {
          * 是为了防止过大的图片造成OOM
          */
     }
+
+    private static String TAG = "BitmapLib";
     
 //    public static Bitmap decodeBitmap(Context context, String picPath, int w, int h, PicZoomOutType zoomOutType) {
 //        if(w < 0 || h < 0) {
@@ -139,19 +141,20 @@ public class BitmapLib {
              */
             bitmap = BitmapFactory.decodeStream(is, null, options);
         } catch(OutOfMemoryError e) {
-            Log.e("TTT", "OutOfMemoryError: 放大缩放比例再试一下");
+            Log.e(TAG, "OutOfMemoryError: 放大缩放比例再试一下");
             // 既然内存不够，就取两者中较大的一个，缩的更小一点试试
             options.inSampleSize = Math.max(options.outWidth / w, options.outHeight / h);
             try {
                 bitmap = BitmapFactory.decodeStream(is, null, options);
             } catch(OutOfMemoryError e1) {
                 // 内存还不够？！不解了！！！
-                Log.e("TTT", "OutOfMemoryError: 放大了缩放比例还是不行，返回null");
+                Log.e(TAG, "OutOfMemoryError: 放大了缩放比例还是不行，返回null");
                 return null;
             }
         }
         
         if(bitmap == null) {
+            Log.e(TAG , "解码失败");
             return null;
         }
         
@@ -200,7 +203,7 @@ public class BitmapLib {
                 /*
                  * 这里直接返回原图好了
                  */
-                Log.e("TTT", "OutOfMemoryError: 挖图失败，返回原图");
+                Log.e(TAG, "OutOfMemoryError: 挖图失败，返回原图");
                 return bitmap;
             }
             return bt;
@@ -228,7 +231,142 @@ public class BitmapLib {
                  * 能报OutOfMemoryError错误，应该是w > btW，放大图片是OOM的
                  * 这里直接返回原图好了
                  */
-                Log.e("TTT", "OutOfMemoryError: 放大图片失败，返回原图");
+                Log.e(TAG, "OutOfMemoryError: 放大图片失败，返回原图");
+                return bitmap;
+            }
+            return bt1;
+        default:
+            break;
+        }
+
+        return null;       
+    }
+    
+    public static Bitmap decodeBitmap(Context context, String pathName, int w, int h, PicZoomOutType zoomOutType) {     
+        if(w < 0 || h < 0) {
+            throw new IllegalArgumentException("w, h必须都大于0");
+        }
+
+        int screenWidth = AndroidUtil.getScreenWidth(context);
+        int screenHeight = AndroidUtil.getScreenHeight(context);
+        
+        // 防止图片过大，显示不出来
+        if (w > screenWidth) { // 宽度的最大值
+            w = screenWidth;
+        }
+
+        if (h > screenHeight) { // 高度的最大值
+            h = screenHeight;
+        } 
+        
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+   //     BitmapFactory.decodeStream(is, null, options);
+        BitmapFactory.decodeFile(pathName, options);
+
+        // 取两者中较小的一个， 保证缩小后的图片比需要的图片大
+        options.inSampleSize = Math.min(options.outWidth / w, options.outHeight / h);
+        options.inJustDecodeBounds = false;
+        
+        Bitmap bitmap = null;
+        try {
+            /*
+             * 在http://www.testin.cn上测试时，发现有的机型报了OutOfMemoryError错误而崩溃
+             */
+            bitmap = BitmapFactory.decodeFile(pathName, options);
+        } catch(OutOfMemoryError e) {
+            Log.e(TAG, "OutOfMemoryError: 放大缩放比例再试一下");
+            // 既然内存不够，就取两者中较大的一个，缩的更小一点试试
+            options.inSampleSize = Math.max(options.outWidth / w, options.outHeight / h);
+            try {
+                bitmap = BitmapFactory.decodeFile(pathName, options);
+            } catch(OutOfMemoryError e1) {
+                // 内存还不够？！不解了！！！
+                Log.e(TAG, "OutOfMemoryError: 放大了缩放比例还是不行，返回null");
+                return null;
+            }
+        }
+        
+        if(bitmap == null) {
+            Log.e(TAG , "解码失败");
+            return null;
+        }
+        
+        int btW = bitmap.getWidth();
+        int btH = bitmap.getHeight();        
+
+        switch (zoomOutType) {
+        case DIG_CENTER:
+            if(btW <= w && btH <= h) {
+                return bitmap;
+            }
+            
+            int x = btW - w;
+            int y = btH - h;
+            
+            int finalW = 0;
+            int finalH = 0;
+            if(x <= 0) {
+                x = 0;
+                finalW = btW;
+            } else {
+                x /= 2;
+                finalW = w;
+            }
+            
+            if (y <= 0) {
+                y = 0;
+                finalH = btH;
+            } else {
+                y /= 2;
+                finalH = h;
+            }
+
+            /*
+             * Bitmap.createBitmap函数要求： 
+             * x + width must be <= bitmap.width()
+             * y + height must be <= bitmap.height()
+             */
+            Bitmap bt = null;
+            try {
+                /*
+                 * 在http://www.testin.cn上测试时，有极个别机型报了OutOfMemoryError错误而崩溃
+                 */
+                bt = Bitmap.createBitmap(bitmap, x, y, finalW, finalH);
+            } catch (OutOfMemoryError e) {
+                /*
+                 * 这里直接返回原图好了
+                 */
+                Log.e(TAG, "OutOfMemoryError: 挖图失败，返回原图");
+                return bitmap;
+            }
+            return bt;
+        case ZOOM_OUT:   
+            if(btW <= w && btH <= h) {
+                return bitmap;
+            }
+            // 没有break，直接进入FILL中
+        case FILL:
+            float scaledW = w;
+            float scaleH = btH * (w / (float)btW);
+            if(scaleH > h) {
+                scaledW *= h / (float)scaleH;
+                scaleH = h;
+            }
+            
+            Bitmap bt1 = null;
+            try {
+                /*
+                 * 在http://www.testin.cn上测试时，有极个别机型报了OutOfMemoryError错误而崩溃
+                 */
+                bt1 = Bitmap.createScaledBitmap(bitmap, (int)scaledW, (int)scaleH, false);
+            } catch (OutOfMemoryError e) {
+                /*
+                 * 能报OutOfMemoryError错误，应该是w > btW，放大图片是OOM的
+                 * 这里直接返回原图好了
+                 */
+                Log.e(TAG, "OutOfMemoryError: 放大图片失败，返回原图");
                 return bitmap;
             }
             return bt1;

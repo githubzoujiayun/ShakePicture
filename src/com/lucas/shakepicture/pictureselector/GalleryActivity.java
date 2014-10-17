@@ -1,5 +1,7 @@
 package com.lucas.shakepicture.pictureselector;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -68,7 +70,14 @@ public class GalleryActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        
+        Language currLang = PhoneLang.getCurrPhoneLang(this);
+
+        if(currLang == Language.CN || currLang == Language.TW) {
+            setContentView(R.layout.activity_gallery_cn);
+        } else {
+            setContentView(R.layout.activity_gallery_eg);
+        }
         
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -76,11 +85,13 @@ public class GalleryActivity extends Activity {
         actionBar.setDisplayShowHomeEnabled(true);  //使左上角图标可点击，对应id为android.R.id.home，对应ActionBar.DISPLAY_SHOW_HOME
         
         startAppAd = new StartAppAd(this);
+                
+        if(currLang == Language.CN || currLang == Language.TW) {
+            // 加入广告条
+            LinearLayout adLayout = (LinearLayout)findViewById(R.id.adLayout);
+            adLayout.addView(AdHelper.getBanner(this, 1));
+        }
         
-        // 加入广告条
-        LinearLayout adLayout = (LinearLayout)findViewById(R.id.adLayout);
-        adLayout.addView(AdHelper.getBanner(this, 1));
-
         SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
         int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
         /*
@@ -197,7 +208,8 @@ public class GalleryActivity extends Activity {
     private Bitmap getBitmapByPos(int pos) {
         InputStream is = null;
         try {
-            is = getAssets().open(picPathArray[pos]);
+            is = new FileInputStream(new File(picPathArray[pos]));
+     //       is = getAssets().open(picPathArray[pos]);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("", e.getMessage());
@@ -205,7 +217,8 @@ public class GalleryActivity extends Activity {
         }
 
         
-        Bitmap bitmap = BitmapLib.decodeBitmap(this, is, 10500, 15000, PicZoomOutType.FILL);
+      //  Bitmap bitmap = BitmapLib.decodeBitmap(this, is, 10500, 15000, PicZoomOutType.FILL);
+        Bitmap bitmap = BitmapLib.decodeBitmap(this, picPathArray[pos], 10500, 15000, PicZoomOutType.FILL);
         
         try {
             is.close();

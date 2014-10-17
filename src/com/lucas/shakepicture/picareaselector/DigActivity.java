@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,8 @@ import com.lucas.shakepicture.picareaselector.RectSelectableImageView.AddAreaRes
 import com.lucas.shakepicture.picareaselector.SelectBox.Position;
 import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
+import com.lucas.util.PhoneLang;
+import com.lucas.util.PhoneLang.Language;
 
 public class DigActivity extends Activity {
     
@@ -60,6 +63,17 @@ public class DigActivity extends Activity {
         setContentView(R.layout.activity_dig); 
         
         // 设置悬浮广告条
+        
+        Language currLang = PhoneLang.getCurrPhoneLang(this);
+        if(currLang == Language.CN || currLang == Language.TW) {
+            FrameLayout.LayoutParams parms = new FrameLayout.LayoutParams(1, 1);
+            parms.gravity = Gravity.LEFT; 
+            View adView = AdHelper.getBanner(this, 1, Language.US);
+            adView.setFocusable(false);
+            adView.setClickable(false);
+            addContentView(adView, parms);
+        }
+        
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams( 
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
                                     FrameLayout.LayoutParams.WRAP_CONTENT);

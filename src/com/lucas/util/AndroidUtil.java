@@ -1,6 +1,11 @@
 package com.lucas.util;
 
+import com.lucas.shakepicture.MainActivity;
+import com.lucas.shakepicture.R;
+import com.lucas.shakepicture.SplashActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -79,6 +85,54 @@ public class AndroidUtil {
         for(int i = 0; i < ids.length; i++) {
             ((TextView)(v.findViewById(ids[i]))).setText(c.getString(c.getColumnIndex(names[i])));
         }
+    }
+    
+    /**
+     * 此函数无法正常工作
+     * @return
+     */
+    /*
+    private boolean isAddShortCut() {
+        final ContentResolver resolver = this.getContentResolver();
+
+        String AUTHORITY = "com.android.launcher2.settings";
+
+        final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/favorites?notify=true");
+        Cursor c = resolver.query(CONTENT_URI,
+                        new String[] { "title", "iconResource" }, "title=?",
+                        new String[] { getString(R.string.app_name) }, null);
+
+        if (c != null && c.getCount() > 0)
+            return true;
+        
+        return false;
+    }
+    */
+    
+    public static void addShortCut(Context context, Class<?> cls){        
+        Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getResources().getString(R.string.app_name));
+ 
+        // 是否允许重复创建
+        shortcut.putExtra("duplicate", false);
+        
+        //设置桌面快捷方式的图标
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(context, R.drawable.icon);        
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+        
+        //点击快捷方式的操作
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.setClass(context, cls);
+        
+        // 设置启动程序
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
+        
+        //广播通知桌面去创建
+        context.sendBroadcast(shortcut);
     }
     
     /*

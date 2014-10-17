@@ -1,5 +1,7 @@
 package com.lucas.shakepicture.pictureselector;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -116,15 +118,16 @@ public class PicWallAdapter extends ArrayAdapter<String> {
             public void run() {
                 InputStream is = null;
                 try {
-                    
-                    is = context.getAssets().open(getItem(position));
+                    is = new FileInputStream(new File(getItem(position)));
+                  //  is = context.openFileInput("half_star.png");
                 } catch (IOException e) {
                     e.printStackTrace();
                     handler.sendMessage(handler.obtainMessage());
                     return;
                 }
 
-                dbt.bitmap =  BitmapLib.decodeBitmap(context, is, w, w, PicZoomOutType.DIG_CENTER);
+          //      dbt.bitmap =  BitmapLib.decodeBitmap(context, is, w, w, PicZoomOutType.DIG_CENTER);
+                dbt.bitmap =  BitmapLib.decodeBitmap(context, getItem(position), w, w, PicZoomOutType.DIG_CENTER);
                 try {
                     is.close();
                 } catch (IOException e) {
@@ -139,59 +142,7 @@ public class PicWallAdapter extends ArrayAdapter<String> {
         
         return convertView;
     }
-    
-    /*
-    private class DecodePicTask extends AsyncTask<Object, Void, Bitmap> {
-
-        private int position;
-        private ImageView iv;
-        private int w;
-        
-        @Override
-        protected Bitmap doInBackground(Object... params) {   
-            Log.e("TTT", "oooooooooooooooooooooooooooooo");
-
-            position = (Integer) params[0];
-            iv = (ImageView) params[1];
-            w = (Integer) params[2];
-            
-            InputStream is = null;
-            try {
-                
-                is = context.getAssets().open(getItem(position));
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("TTT", "11111111111111111111");
-                return null;
-            }
-            Log.e("TTT", "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-            Bitmap bt =  BitmapLib.decodeBitmap(context, is, w, w, PicZoomOutType.DIG_CENTER);
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("TTT", "222222222222222222222222");
-            }
-            Log.e("TTT", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-            return bt;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if(result != null) {
-                picCache.put(position, result);
-                iv.setImageBitmap(result);
-                allTasks.remove(this);
-                Log.e("TTT", "44444444444444444444444");
-            } else {
-                Log.e("TTT", "3333333333333333333333333");
-                Toast.makeText(context, "ÄÚ´æ²»×ã£¬½âÂëÍ¼Æ¬Ê§°Ü", Toast.LENGTH_SHORT).show();
-            }
-        }
-        
-    }
-*/
-    
+       
     public void cancelAllTasks() {
         Iterator<AsyncTask<Object, Void, Bitmap>> iter = allTasks.iterator();
 
@@ -201,8 +152,4 @@ public class PicWallAdapter extends ArrayAdapter<String> {
                 task.cancel(true);
         }
     }
-//
-//    private class Holder {
-//        public ImageView iv;
-//    }
 }

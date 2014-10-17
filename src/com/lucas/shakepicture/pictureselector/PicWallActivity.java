@@ -1,5 +1,6 @@
 package com.lucas.shakepicture.pictureselector;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -24,6 +25,7 @@ import android.widget.GridView;
 import com.lucas.shakepicture.R;
 import com.lucas.util.AdHelper;
 import com.lucas.util.PhoneLang;
+import com.lucas.util.PhoneLang.Language;
 import com.startapp.android.publish.banner.Banner;
 
 public class PicWallActivity extends Activity {
@@ -54,26 +56,43 @@ public class PicWallActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pic_wall);
+        
+        Language currLang = PhoneLang.getCurrPhoneLang(this);
+
+        if(currLang == Language.CN || currLang == Language.TW) {
+            setContentView(R.layout.activity_pic_wall_cn);
+        } else {
+            setContentView(R.layout.activity_pic_wall_eg);
+        }
         
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true); // 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
         actionBar.setDisplayShowHomeEnabled(true);  //使左上角图标可点击，对应id为android.R.id.home，对应ActionBar.DISPLAY_SHOW_HOME              
         
-        // 加入广告条
-        LinearLayout adLayout = (LinearLayout)findViewById(R.id.adLayout);
-        adLayout.addView(AdHelper.getBanner(this, 1));
-        
-        try {
-            picPathArr = getAssets().list("belle");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ;
+        if(currLang == Language.CN || currLang == Language.TW) {
+            // 加入广告条
+            LinearLayout adLayout = (LinearLayout)findViewById(R.id.adLayout);
+            adLayout.addView(AdHelper.getBanner(this, 1));
         }
         
+//        try {
+//            picPathArr = getAssets().list("belle");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return ;
+//        }
+//        
+//        for(int i = 0; i < picPathArr.length; i++) {
+//            picPathArr[i] = "belle/" + picPathArr[i];
+//        }
+        
+        String picPath = getFilesDir().getPath() + "/belle/";
+        File file = new File(picPath);
+        picPathArr = file.list();
+        
         for(int i = 0; i < picPathArr.length; i++) {
-            picPathArr[i] = "belle/" + picPathArr[i];
+            picPathArr[i] = picPath + picPathArr[i];
         }
 
         GridView picWall = (GridView) findViewById(R.id.pic_wall);        

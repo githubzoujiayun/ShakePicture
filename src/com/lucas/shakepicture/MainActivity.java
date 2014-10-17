@@ -36,11 +36,13 @@ import android.widget.Toast;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
 import com.lucas.shakepicture.pictureselector.PicWallActivity;
+import com.lucas.util.AndroidUtil;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
 import com.lucas.util.PhoneLang;
 import com.lucas.util.StartApp;
 import com.lucas.util.YouMi;
+import com.startapp.android.publish.StartAppAd;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends Activity {
@@ -61,12 +63,7 @@ public class MainActivity extends Activity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        YouMi.init(this);       
-        StartApp.init(this);
-        
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);        setContentView(R.layout.activity_main);
         
 //        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
 //        int w = AndroidUtil.getScreenWidth(this);
@@ -74,25 +71,25 @@ public class MainActivity extends Activity {
 //        Toast.makeText(this, "" + maxMemory + " MB" + ", [" + w + ", " + h + "]", 1).show();
         
         // 开启用户数据统计服务,默认不开启，传入 false 值也不开启，只有传入 true 才会调用
-        AdManager.getInstance(this).setUserDataCollect(true);
+//        AdManager.getInstance(this).setUserDataCollect(true);
 
-        SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
-        int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
-        
-        Editor editor = sp.edit();
-        editor.putInt(Common.SPKeyBootCount, ++bootCount);
-        editor.commit();
-        
-        if(bootCount == 1) {
-            /*
-             *  首次启动，创建一下桌面快捷方式
-             *  以后将不再做检查
-             */
-            addShortCut();
-        }
+//        SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
+//        int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
+//        
+//        Editor editor = sp.edit();
+//        editor.putInt(Common.SPKeyBootCount, ++bootCount);
+//        editor.commit();
+//        
+//        if(bootCount == 1) {
+//            /*
+//             *  首次启动，创建一下桌面快捷方式
+//             *  以后将不再做检查
+//             */
+//            AndroidUtil.addShortCut(this);
+//        }
         
         // 检查更新（使用友盟的接口）
-        UmengUpdateAgent.setDeltaUpdate(false); // true增量更新，设为false则为全量更新
+        UmengUpdateAgent.setDeltaUpdate(true); // true增量更新，设为false则为全量更新
         UmengUpdateAgent.update(this);
                 
         // 保持屏幕不灭
@@ -213,18 +210,21 @@ public class MainActivity extends Activity {
             if(uri != null) {
                 PicAreaSelect.startSelect(this, uri, onSelectDonwListener);
             }
-        } else if(requestCode == SELECT_BUILD_IN_PIC && data != null) {
+        } else if(requestCode == SELECT_BUILD_IN_PIC && data != null) {  // 选择一张应用自带图片
             String picPath = data.getExtras().getString("picPath");
-            InputStream is = null;
-            try {
-                is = getAssets().open(picPath);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return;
-            }
+//            InputStream is = null;
+//            try {
+//                is = getAssets().open(picPath);
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//                return;
+//            }
+       //     BitmapReference.appBuildInSelectedBitmap = BitmapLib.decodeBitmap(
+      //                                              this, is, 100000, 100000, PicZoomOutType.ZOOM_OUT);
+            
             BitmapReference.appBuildInSelectedBitmap = BitmapLib.decodeBitmap(
-                                                    this, is, 100000, 100000, PicZoomOutType.ZOOM_OUT);
+                                this, picPath, 100000, 100000, PicZoomOutType.ZOOM_OUT);
             PicAreaSelect.startSelect(this, onSelectDonwListener);
         }
         
@@ -270,53 +270,4 @@ public class MainActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    
-    /**
-     * 此函数无法正常工作
-     * @return
-     */
-    /*
-    private boolean isAddShortCut() {
-        final ContentResolver resolver = this.getContentResolver();
-
-        String AUTHORITY = "com.android.launcher2.settings";
-
-        final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/favorites?notify=true");
-        Cursor c = resolver.query(CONTENT_URI,
-                        new String[] { "title", "iconResource" }, "title=?",
-                        new String[] { getString(R.string.app_name) }, null);
-
-        if (c != null && c.getCount() > 0)
-            return true;
-        
-        return false;
-    }
-    */
-    
-    private void addShortCut(){        
-        Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
- 
-        // 是否允许重复创建
-        shortcut.putExtra("duplicate", false);
-        
-        //设置桌面快捷方式的图标
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(this, R.drawable.icon);        
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-        
-        //点击快捷方式的操作
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setClass(this, MainActivity.class);
-        
-        // 设置启动程序
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-        
-        //广播通知桌面去创建
-        this.sendBroadcast(shortcut);
-    }
-
 }
