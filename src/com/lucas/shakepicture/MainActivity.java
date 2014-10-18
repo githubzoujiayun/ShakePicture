@@ -63,7 +63,8 @@ public class MainActivity extends Activity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         
 //        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);  
 //        int w = AndroidUtil.getScreenWidth(this);
