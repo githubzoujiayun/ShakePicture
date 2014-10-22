@@ -74,23 +74,24 @@ public class MainActivity extends Activity {
         // 开启用户数据统计服务,默认不开启，传入 false 值也不开启，只有传入 true 才会调用
 //        AdManager.getInstance(this).setUserDataCollect(true);
 
-//        SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
-//        int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
-//        
-//        Editor editor = sp.edit();
-//        editor.putInt(Common.SPKeyBootCount, ++bootCount);
-//        editor.commit();
-//        
-//        if(bootCount == 1) {
+        SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
+        int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
+        
+        Editor editor = sp.edit();
+        editor.putInt(Common.SPKeyBootCount, bootCount);
+        editor.commit();
+        
+//        if(bootCount < 10) { 
 //            /*
-//             *  首次启动，创建一下桌面快捷方式
-//             *  以后将不再做检查
+//             * 因为内地应用市场说本应用涉黄
+//             * 所有前10此启动，不显示“应用内置图片按钮”
+//             * 注意：如果发布Google play市场，需取消此限制！
 //             */
-//            AndroidUtil.addShortCut(this);
+//            findViewById(R.id.app_built_in_pic).setVisibility(View.GONE);
 //        }
         
         // 检查更新（使用友盟的接口）
-        UmengUpdateAgent.setDeltaUpdate(true); // true增量更新，设为false则为全量更新
+        UmengUpdateAgent.setDeltaUpdate(false); // true增量更新，设为false则为全量更新
         UmengUpdateAgent.update(this);
                 
         // 保持屏幕不灭

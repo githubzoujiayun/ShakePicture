@@ -15,12 +15,12 @@ import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.lucas.util.AndroidUtil;
 import com.lucas.util.StartApp;
 import com.lucas.util.YouMi;
-import com.startapp.android.publish.StartAppAd;
-import com.startapp.android.publish.splash.SplashConfig;
 
 public class SplashActivity extends Activity {
 
@@ -129,5 +129,13 @@ public class SplashActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+    
+    /**
+     * 屏蔽按键，不能返回
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return true;
     }
 }
