@@ -1,11 +1,10 @@
 package com.lucas.util;
 
-import com.lucas.shakepicture.MainActivity;
-import com.lucas.shakepicture.R;
-import com.lucas.shakepicture.SplashActivity;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -19,6 +18,8 @@ import android.os.Parcelable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.lucas.shakepicture.R;
 
 
 public class AndroidUtil {   
@@ -205,6 +206,20 @@ public class AndroidUtil {
             return null;  // 不相交
 
         return r;
+    }
+    
+    
+    /**
+     * 获取版本号
+     * 
+     * @return 当前应用的版本号
+     * @throws NameNotFoundException 
+     */
+    public static int getVersionCode(Context context) throws NameNotFoundException {
+        PackageManager manager = context.getPackageManager();
+        PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+        int version = info.versionCode;
+        return version;
     }
     
 
