@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
+import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
 import com.lucas.util.PhoneLang;

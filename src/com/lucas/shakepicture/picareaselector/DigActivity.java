@@ -18,15 +18,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lucas.shakepicture.BitmapReference;
-import com.lucas.shakepicture.R;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
 import com.lucas.shakepicture.picareaselector.RectSelectableImageView.AddAreaResult;
 import com.lucas.shakepicture.picareaselector.SelectBox.Position;
+import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.AdHelper;
 import com.lucas.util.AndroidUtil;
 import com.lucas.util.PhoneLang;

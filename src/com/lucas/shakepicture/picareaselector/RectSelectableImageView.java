@@ -15,7 +15,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.lucas.shakepicture.R;
+import com.lucas.shakepicture_for_google_play.R;
 
 public class RectSelectableImageView extends ImageView {
     

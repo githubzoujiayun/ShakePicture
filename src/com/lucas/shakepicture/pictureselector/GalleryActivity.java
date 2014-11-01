@@ -5,10 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.youmi.android.banner.AdSize;
-import net.youmi.android.banner.AdView;
 import net.youmi.android.spot.SpotManager;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -22,26 +19,23 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lucas.shakepicture.Common;
-import com.lucas.shakepicture.R;
+import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.AdHelper;
 import com.lucas.util.BitmapLib;
-import com.lucas.util.PhoneLang;
 import com.lucas.util.BitmapLib.PicZoomOutType;
+import com.lucas.util.PhoneLang;
 import com.lucas.util.PhoneLang.Language;
 import com.startapp.android.publish.StartAppAd;
-import com.startapp.android.publish.banner.Banner;
 
 public class GalleryActivity extends Activity {
     

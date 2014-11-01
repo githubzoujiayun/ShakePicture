@@ -1,12 +1,9 @@
 package com.lucas.shakepicture;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
-import net.youmi.android.AdManager;
 import net.youmi.android.diy.DiyManager;
 import net.youmi.android.spot.SpotManager;
 import android.app.Activity;
@@ -20,7 +17,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.provider.MediaStore;
@@ -36,13 +32,10 @@ import android.widget.Toast;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect;
 import com.lucas.shakepicture.picareaselector.PicAreaSelect.OnSelectDoneListener;
 import com.lucas.shakepicture.pictureselector.PicWallActivity;
-import com.lucas.util.AndroidUtil;
+import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
 import com.lucas.util.PhoneLang;
-import com.lucas.util.StartApp;
-import com.lucas.util.YouMi;
-import com.startapp.android.publish.StartAppAd;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends Activity {
@@ -80,16 +73,7 @@ public class MainActivity extends Activity {
         Editor editor = sp.edit();
         editor.putInt(Common.SPKeyBootCount, bootCount);
         editor.commit();
-        
-//        if(bootCount < 10) { 
-//            /*
-//             * 因为内地应用市场说本应用涉黄
-//             * 所有前10此启动，不显示“应用内置图片按钮”
-//             * 注意：如果发布Google play市场，需取消此限制！
-//             */
-//            findViewById(R.id.app_built_in_pic).setVisibility(View.GONE);
-//        }
-        
+                
         // 检查更新（使用友盟的接口）
         UmengUpdateAgent.setDeltaUpdate(false); // true增量更新，设为false则为全量更新
         UmengUpdateAgent.update(this);

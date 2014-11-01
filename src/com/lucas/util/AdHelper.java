@@ -3,11 +3,9 @@ package com.lucas.util;
 import net.youmi.android.banner.AdSize;
 import net.youmi.android.banner.AdView;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import com.lucas.util.PhoneLang.Language;
-import com.startapp.android.publish.banner.Banner;
 
 /**
  * ¹ã¸æÖúÊÖ

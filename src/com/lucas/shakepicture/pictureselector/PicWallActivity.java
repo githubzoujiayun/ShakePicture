@@ -1,32 +1,24 @@
 package com.lucas.shakepicture.pictureselector;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
-
-import net.youmi.android.banner.AdSize;
-import net.youmi.android.banner.AdView;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
-import com.lucas.shakepicture.R;
+import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.AdHelper;
 import com.lucas.util.PhoneLang;
 import com.lucas.util.PhoneLang.Language;
-import com.startapp.android.publish.banner.Banner;
 
 public class PicWallActivity extends Activity {
     

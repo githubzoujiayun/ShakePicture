@@ -6,18 +6,20 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.youmi.android.AdManager;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
+import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.AndroidUtil;
 import com.lucas.util.StartApp;
 import com.lucas.util.YouMi;
@@ -59,6 +61,7 @@ public class SplashActivity extends Activity {
                     AdManager.getInstance(SplashActivity.this).setUserDataCollect(true);
                     
                     SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
+                    int lastBootVersionCode = sp.getInt(Common.SPKeyBootVersionCode, -1);
                     int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
                     
                     Editor editor = sp.edit();
@@ -81,10 +84,24 @@ public class SplashActivity extends Activity {
                     } else {
                         if(path.list().length == 0) { // 文件夹为空，需拷贝
                             copyBellePicsToPhone(path);
+                        } else {
+                            int currVersionCode;
+                            try {
+                                currVersionCode = AndroidUtil.getVersionCode(SplashActivity.this);
+                                if(lastBootVersionCode != currVersionCode) {
+                                    copyBellePicsToPhone(path);
+                                    
+                                    Editor e = sp.edit();
+                                    e.putInt(Common.SPKeyBootVersionCode, currVersionCode);
+                                    e.commit();
+                                }
+                            } catch (NameNotFoundException e1) {
+                                e1.printStackTrace();
+                            }                            
                         }
                     }
                     
-                    Thread.sleep(1000);
+                    Thread.sleep(0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -99,6 +116,19 @@ public class SplashActivity extends Activity {
      * @param path Phone中存放belle pics 的路径
      */
     private void copyBellePicsToPhone(File path) {
+        
+        // 先清空path目录
+        if(!path.exists() || !path.isDirectory()) {
+            return;
+        }
+        
+        String[] arr = path.list();
+        for(String s : arr) {
+            File f = new File(path, s);
+            f.delete();
+        }
+        
+        // 遍历得到asset中bell文件夹下的文件
         AssetManager mgr = getAssets();
         String[] pathArr = null;
         
