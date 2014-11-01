@@ -134,25 +134,25 @@ public class MainActivity extends Activity {
         });
         
         // ÍÆ¼öÇ½¹ã¸æ
-        View appRecommend = findViewById(R.id.app_recommend);
-        switch (PhoneLang.getCurrPhoneLang(this)) {
-        case CN:
-        case TW:
-            break;
-
-        default:
-            appRecommend.setVisibility(View.INVISIBLE);
-            break;
-        }
-        
-        appRecommend.setOnClickListener(
-            new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-    //                DiyManager.showRecommendWall(MainActivity.this);
-                }
-       });
+//        View appRecommend = findViewById(R.id.app_recommend);
+//        switch (PhoneLang.getCurrPhoneLang(this)) {
+//        case CN:
+//        case TW:
+//            break;
+//
+//        default:
+//            appRecommend.setVisibility(View.INVISIBLE);
+//            break;
+//        }
+//        
+//        appRecommend.setOnClickListener(
+//            new OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {
+//                    DiyManager.showRecommendWall(MainActivity.this);
+//                }
+//       });
     }
     
     private OnSelectDoneListener onSelectDonwListener = new OnSelectDoneListener() {
