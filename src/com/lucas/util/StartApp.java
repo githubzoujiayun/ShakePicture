@@ -6,7 +6,7 @@ import android.content.Context;
 
 public class StartApp {
     public static final String DEVELOPER_ID = "109403462";
-    public static final String APP_KEY = "209478027";
+    public static final String APP_KEY = "211610361";
     
     public static void init(Context context) {
         /*

@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
-import net.youmi.android.diy.DiyManager;
-import net.youmi.android.spot.SpotManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -36,7 +34,6 @@ import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.BitmapLib;
 import com.lucas.util.BitmapLib.PicZoomOutType;
 import com.lucas.util.PhoneLang;
-import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends Activity {
     
@@ -73,10 +70,6 @@ public class MainActivity extends Activity {
         Editor editor = sp.edit();
         editor.putInt(Common.SPKeyBootCount, bootCount);
         editor.commit();
-                
-        // 检查更新（使用友盟的接口）
-        UmengUpdateAgent.setDeltaUpdate(false); // true增量更新，设为false则为全量更新
-        UmengUpdateAgent.update(this);
                 
         // 保持屏幕不灭
         PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);  
@@ -157,7 +150,7 @@ public class MainActivity extends Activity {
 
                 @Override
                 public void onClick(View v) {
-                    DiyManager.showRecommendWall(MainActivity.this);
+    //                DiyManager.showRecommendWall(MainActivity.this);
                 }
        });
     }
@@ -228,10 +221,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
-        // 注销有米插屏广告广播
-        SpotManager.getInstance(this) .unregisterSceenReceiver();
-        
+    protected void onDestroy() {        
         // 熄灭屏幕
         wakeLock.release(); 
         

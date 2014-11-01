@@ -5,16 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.youmi.android.spot.SpotManager;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -28,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lucas.shakepicture.Common;
 import com.lucas.shakepicture_for_google_play.R;
 import com.lucas.util.AdHelper;
 import com.lucas.util.BitmapLib;
@@ -86,59 +81,59 @@ public class GalleryActivity extends Activity {
             adLayout.addView(AdHelper.getBanner(this, 1));
         }
         
-        SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
-        int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
-        /*
-         * 前10次启动不展示插屏广告，原因：
-         * 1. 在各个市场审核阶段，广告显示不出来（那些变态不会把应用连启10次吧？）
-         * 2. 用户刚开始使用时有一个好的体验
-         */
-        if(bootCount > 10) { 
-            // 展示插屏广告
-            final SpotManager spotManager = SpotManager.getInstance(this);
-            final Handler handler = new Handler(new Handler.Callback() {
-                
-                private Language lang = PhoneLang.getCurrPhoneLang(GalleryActivity.this);
-                
-                @Override
-                public boolean handleMessage(Message msg) {
-                    switch (lang) {
-                    case CN:
-                        spotManager.showSpotAds(GalleryActivity.this);
-                        break;
-                    case TW:
-                        spotManager.showSpotAds(GalleryActivity.this);
-                        break;
-                    default:
-                        startAppAd.showAd();
-                        startAppAd.loadAd();
-                        break;
-                    }
-                    return false;
-                }
-            });
-    
-            new Thread(new Runnable() {
-    
-                @Override
-                public void run() {
-                    while(true) {
-                        try {
-                            // 每30s展示一次插屏广告
-                            Thread.sleep(30 * 1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        
-                        if(exit) {
-                            break;
-                        }
-                        
-                        handler.sendMessage(new Message());
-                    }
-                }
-            }).start();
-        }
+//        SharedPreferences sp = getSharedPreferences(Common.SharedPreFileName, Context.MODE_PRIVATE);
+//        int bootCount = sp.getInt(Common.SPKeyBootCount, 0);
+//        /*
+//         * 前10次启动不展示插屏广告，原因：
+//         * 1. 在各个市场审核阶段，广告显示不出来（那些变态不会把应用连启10次吧？）
+//         * 2. 用户刚开始使用时有一个好的体验
+//         */
+//        if(bootCount > 10) { 
+//            // 展示插屏广告
+//            final SpotManager spotManager = SpotManager.getInstance(this);
+//            final Handler handler = new Handler(new Handler.Callback() {
+//                
+//                private Language lang = PhoneLang.getCurrPhoneLang(GalleryActivity.this);
+//                
+//                @Override
+//                public boolean handleMessage(Message msg) {
+//                    switch (lang) {
+//                    case CN:
+//                        spotManager.showSpotAds(GalleryActivity.this);
+//                        break;
+//                    case TW:
+//                        spotManager.showSpotAds(GalleryActivity.this);
+//                        break;
+//                    default:
+//                        startAppAd.showAd();
+//                        startAppAd.loadAd();
+//                        break;
+//                    }
+//                    return false;
+//                }
+//            });
+//    
+//            new Thread(new Runnable() {
+//    
+//                @Override
+//                public void run() {
+//                    while(true) {
+//                        try {
+//                            // 每30s展示一次插屏广告
+//                            Thread.sleep(30 * 1000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        
+//                        if(exit) {
+//                            break;
+//                        }
+//                        
+//                        handler.sendMessage(new Message());
+//                    }
+//                }
+//            }).start();
+//        }
         
         picPathArray = getIntent().getExtras().getStringArray("picPathArray");
         int beginPos = getIntent().getExtras().getInt("beginPos");
